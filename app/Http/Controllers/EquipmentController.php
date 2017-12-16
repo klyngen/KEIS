@@ -17,7 +17,18 @@ class EquipmentController extends Controller {
     }
 
     public function store(Request $request) {
-        $eq = Equipment::create($request->all());
+        $data = $request->json()->all();
+        //return Array($request->input('model'));
+
+        $brand = BrandController::solveDependence($request->input('brand'));
+        $type = TypeController::solveDependence($request->input('type'));
+        //return $brand;
+
+        $eq = Equipment::create(Array("brands"=>$brand,
+            "types"=>$type,
+            "description"=>$request->input('description'),
+            "model"=>$request->input("model")));
+
         return response()->json($eq, 201);
     }
 
@@ -33,8 +44,6 @@ class EquipmentController extends Controller {
       $eq = Equipment::findOrFail($id);
       $eq->delete();
 
-      return response()->json(null, 204);
+      return response()->json(Array("error"=>"Could not delete the item"), 204);
     }
-
-
 }

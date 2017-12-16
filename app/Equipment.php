@@ -8,6 +8,6 @@ use Illuminate\Support\Facades\Schema;
 
 class Equipment extends Model
 {
-    protected $fillTable = ["brand", "type", "model", "description"];
-
+    protected $fillTable = ["brands", "types", "model", "description"];
+    protected $fillable = ["brands", "types", "model", "description"];
 }
