@@ -26,6 +26,7 @@ Route::delete('equipment/{id}', 'EquipmentController@delete');
 
 // Get all instances of equipment
 Route::get('instance/{id}', 'InstanceController@getAllEquipment');
+Route::post('instance', 'InstanceController@store');
 
 
 

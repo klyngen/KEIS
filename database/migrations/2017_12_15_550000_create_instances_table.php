@@ -16,7 +16,7 @@ class CreateInstancesTable extends Migration
         Schema::create('instances', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('condition');
-            $table->timestamp('purchasetime');
+            $table->date('purchasetime');
             $table->integer("equipment")->unsigned();
             $table->foreign('equipment')->references('id')->on('equipment');
             $table->char("RFID", 20);
