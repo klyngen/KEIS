@@ -13,7 +13,9 @@ class EquipmentController extends Controller {
     }
 
     public function show($id) {
-        return Equipment::find($id);
+        //return Equipment::find($id);
+        $eq = Equipment::find($id);
+        return response()->json($eq, 200);
     }
 
     public function store(Request $request) {
@@ -43,7 +45,7 @@ class EquipmentController extends Controller {
       $eq->update(Array('brands'=>$brand,
       'types'=>$type,
       'description'=>$request->input('description'),
-      'model'=>$request->input('model')));
+      'modhttps://www.google.com/search?q=laravel+builder+count&ie=utf-8&oe=utf-8&client=firefox-b-abel'=>$request->input('model')));
 
 
 
@@ -54,6 +56,28 @@ class EquipmentController extends Controller {
       $eq = Equipment::findOrFail($id);
       $eq->delete();
 
-      return response()->json(Array("error"=>"Could not delete the item"), 204);
+      return response()->json(Array("success"=>"Item delet"), 204);
+    }
+
+
+    public function search(Request $response) {
+        $brand = $response->input('brand');
+        $type = $response->input('type');
+
+        $model = $response->input('model');
+
+        $searchArray = Array();
+
+        if ($brand != null)
+            array_add($searchArray, ['brand'=>$brand]);
+
+        if ($type != null)
+            array_add($searchArray, ['type'=>$type]);
+
+        $result = Instances::join('equipment', 'equipment.id', '=', 'instances.equipment')
+            ->where($searchArray)
+            ->orWhere('model', 'like', '%'.$model.'%')->get();
+
+        return response()->json($result, 200);
     }
 }

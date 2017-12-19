@@ -1,8 +1,9 @@
 Manage renting:
   - Change migrations OK
-  - Create api-routes
-  - Neccessary code
-  - Get status of rented devices for graphs
+  - Create api-routes OK
+  - Neccessary code   OK
+  - Get items rented by a specific user OK
+  - Get status of rented devices for graphs 
 
 Get items by giving type or brand
   - One function that builds a good search query

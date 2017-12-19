@@ -73,4 +73,10 @@ class InstanceController extends Controller
 
       return $instance;
     }
+
+    public function delete(Request $request, $id) {
+        $instance = Instance::findOrFail($id);
+        $instance->delete();
+        return response()->json(["success"=>"deleted the instance {$instance->id}"]);
+    }
 }

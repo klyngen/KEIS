@@ -16,4 +16,9 @@ class TypeController extends Controller
 
       return Type::create(Array("name"=>strtoupper($name)))->id;
     }
+
+    public function index() {
+        return resonse()->json(Brand::all(), 200);
+    }
+
 }

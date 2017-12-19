@@ -25,13 +25,28 @@ Route::put('equipment/{id}', 'EquipmentController@update');
 Route::delete('equipment/{id}', 'EquipmentController@delete');
 Route::get('equipment/{id}/instance', 'InstanceController@getAllEquipment');
 
-// Get all instances of equipment
-
+// Instance functionality
 Route::post('instance', 'InstanceController@store');
 Route::put('instance/{id}', 'InstanceController@update');
+Route::delete('instance/{id}', 'InstanceController@delete');
+
+// Rent functionality
+Route::get('rent', 'RentController@index');
+Route::get('rent/{id}', 'RentController@show');
+Route::post('rent', 'RentController@store');
+Route::put('rent/{id}', 'RentController@deliver');
+Route::get('stats', 'RentController@statistics');
+
+// User functionality
+Route::get('user', 'UserController@index');
+Route::get('user/{id}', 'UserController@show');
+Route::delete('user/{id}', 'UserController@delete');
+Route::post('user', 'UserController@store');
+Route::get('user/activerent/{id}', 'UserController@activeRent'); 
 
 
+// Get brands and types
+Route::get('brand', 'BrandController@index');
+Route::get('type', 'TypeController@index');
 
-
-
-// Instance related reltated routes
+Route::get('search', 'EquipmentController@search');

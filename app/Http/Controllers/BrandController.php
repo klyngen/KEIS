@@ -13,7 +13,11 @@ class BrandController extends Controller
       if ($brand->isNotEmpty()) {
         return $brand[0]->id;
       }
-      
+
       return Brand::create(Array("name"=>strtoupper($b)))->id;
+    }
+
+    public function index() {
+        return response()->json(Brand::all(), 200);
     }
 }
