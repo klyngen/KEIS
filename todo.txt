@@ -1,0 +1,12 @@
+Manage renting:
+  - Change migrations OK
+  - Create api-routes
+  - Neccessary code
+  - Get status of rented devices for graphs
+
+Get items by giving type or brand
+  - One function that builds a good search query
+
+
+Begin polymer development
+  - To be continued

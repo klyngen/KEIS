@@ -23,6 +23,7 @@ class CreateRentsTable extends Migration
             $table->foreign('users')->references('id')->on('users');
             $table->foreign('instances')->references('id')->on('instances');
             $table->timestamps();
+            $table->dateTime("stop")->nullable();
         });
     }
 
@@ -38,3 +39,4 @@ class CreateRentsTable extends Migration
         Schema::dropIfExists('rents');
     }
 }
+https://github.com/xcwen/ac-phphttps://github.com/xcwen/ac-php
