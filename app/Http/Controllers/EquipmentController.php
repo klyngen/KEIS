@@ -34,7 +34,17 @@ class EquipmentController extends Controller {
 
     public function update(Request $request, $id) {
       $eq = Equipment::findOrFail($id);
-      $eq->update($request->all());
+
+      //$eq->update($request->all());
+
+      $brand = BrandController::solveDependence($request->input('brand'));
+      $type = TypeController::solveDependence($request->input('type'));
+
+      $eq->update(Array('brands'=>$brand,
+      'types'=>$type,
+      'description'=>$request->input('description'),
+      'model'=>$request->input('model')));
+
 
 
       return response()->json($eq, 200);

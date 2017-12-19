@@ -23,10 +23,13 @@ Route::get('equipment/{id}', 'EquipmentController@show');
 Route::post('equipment', 'EquipmentController@store');
 Route::put('equipment/{id}', 'EquipmentController@update');
 Route::delete('equipment/{id}', 'EquipmentController@delete');
+Route::get('equipment/{id}/instance', 'InstanceController@getAllEquipment');
 
 // Get all instances of equipment
-Route::get('instance/{id}', 'InstanceController@getAllEquipment');
+
 Route::post('instance', 'InstanceController@store');
+Route::put('instance/{id}', 'InstanceController@update');
+
 
 
 
