@@ -1,0 +1,50 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link href="../bower_components/paper-input/paper-input.html" rel="import"/>
+<link href="../bower_components/paper-input/paper-textarea.html" rel="import"/>
+<link href="../bower_components/paper-button/paper-button.html" rel="import"/>
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="add-equipment">
+    <template>
+        <style>
+        </style>
+        <div class="container">
+          <paper-input label="Model" value="{{model}}"></paper-input>
+          <paper-input label="Type" value="{{type}}"></paper-input>
+          <paper-input label="Brand" value="{{brand}}"></paper-input>
+          <paper-textarea label="Description" value="{{description}}"></paper-textarea>
+          <paper-button on-click="save"> <b>Sumbit</b> </paper-button>
+        </div>
+
+    </template>
+
+
+    <script>
+     class AddEquipment extends Polymer.Element {
+
+         static get is() {return 'add-equipment';}
+
+         static get properties() {
+             return {
+                 model: String,
+                 type: String,
+                 brand: String,
+                 description: String,
+             };
+         }
+
+         save() {
+             console.log(this.model);
+         }
+
+         clearFields() {
+             this.model = "";
+             this.type = "";
+             this.brand = "";
+             this.description = "";
+         }
+
+     };
+     window.customElements.define(AddEquipment.is, AddEquipment);
+    </script>
+</dom-module>

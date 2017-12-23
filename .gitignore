@@ -4,6 +4,7 @@
 /storage/*.key
 /vendor
 /.idea
+/frontend/bower_components
 /.vagrant
 Homestead.json
 Homestead.yaml
