@@ -10,8 +10,9 @@
 <link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
 <link href="../bower_components/iron-ajax/iron-ajax.html" rel="import"/>
 <link href="../bower_components/paper-progress/paper-progress.html" rel="import"/>
+<link href="../bower_components/iron-collapse/iron-collapse.html" rel="import"/>
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="./klingen-notify.html">
+<link rel="import" href="klingen-notify.html">
 
 
 <dom-module id="add-equipment">
@@ -20,62 +21,61 @@
           #submitBTN {
             width: 100%;
           }
+            paper-dropdown-menu-light {
+                width: 100%;
+            }
         </style>
-        <div class="card">
 
-          <div class="card-body">
             <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-            <h4 class="card-title">Add new equipment</h4>
-            <p class="card-text">
-              Add a new type of equipment to the system. Feel free to use dropdowns for
-              name and type. This is for correct spelling that leads to better results in searches.
-              Note that it is neccessary to also add an instance of this equipment before it is possible
-              to rent out the equipment.
-            </p>
-            <paper-input label="Model" value="{{model}}" required auto-validate error-message="This field is required" on-input="validate"></paper-input>
-            <paper-textarea label="Description" value="{{description}}"></paper-textarea>
-            <div class="row">
-              <div class="col-sm-7 col-md-8 col-xs-6">
-                <paper-input label="Brand" value="{{brand}}" class="share" required auto-validate error-message="This field is required" on-input="validate"></paper-input>
-              </div>
+              <a ref="#" on-click="open"><h5>{{title}}<iron-icon id="expandIcon" icon="icons:expand-more"></iron-icon></h5></a>
+              <iron-collapse id="collapse">
+                  <div>
 
-              <div class="col-sm-5 col-md-4 col-xs-6">
-                <paper-dropdown-menu-light label="Select existing brand" value="{{brand}}" on-paper-dropdown-close="validate" noink no-animations>
-                  <paper-listbox slot="dropdown-content">
-                    <template id="brandRepeater" is="dom-repeat" items="{{brands}}">
-                      <paper-item>{{item.name}}</paper-item>
-                    </template>
-                  </paper-listbox>
-                </paper-dropdown-menu-light>
-              </div>
-            </div>
+                      <paper-input label="Model" value="{{model}}" required auto-validate error-message="This field is required" on-input="validate"></paper-input>
+                      <paper-textarea label="Description" value="{{description}}"></paper-textarea>
+                      <div class="row">
+                          <div class="col-sm-6 col-md-6 col-sx-6">
+                              <paper-input label="Brand" value="{{brand}}" class="share" required auto-validate error-message="This field is required" on-input="validate"></paper-input>
+                          </div>
 
-            <div class="row">
-              <div class="col-sm-7 col-md-8 col-xs-6">
-                <paper-input label="Type" value="{{type}}" class="share" required auto-validate error-message="This field is required" on-value-changed="validate"></paper-input>
-              </div>
+                          <div class="col-sm-6 col-md-6 col-sx-6">
+                              <paper-dropdown-menu-light label="Select existing brand" value="{{brand}}" on-paper-dropdown-close="validate" noink no-animations>
+                                  <paper-listbox slot="dropdown-content">
+                                      <template id="brandRepeater" is="dom-repeat" items="{{brands}}">
+                                          <paper-item>{{item.name}}</paper-item>
+                                      </template>
+                                  </paper-listbox>
+                              </paper-dropdown-menu-light>
+                          </div>
+                      </div>
 
-              <div class="col-sm-4 col-md-4 col-xs-6">
-                <paper-dropdown-menu-light label="Select existing type" on-paper-dropdown-close="validate" value="{{type}}" noink no-animations>
+                      <div class="row">
+                          <div class="col-sm-6 col-md-6 col-sx-6">
+                              <paper-input label="Type" value="{{type}}" class="share" required auto-validate error-message="This field is required" on-value-changed="validate"></paper-input>
+                          </div>
 
-                  <paper-listbox slot="dropdown-content">
-                    <template id="brandRepeater" is="dom-repeat" items="{{types}}">
-                      <paper-item>{{item.name}}</paper-item>
-                    </template>
-                  </paper-listbox>
+                          <div class="col-sm-6 col-md-6 col-sx-6">
+                              <paper-dropdown-menu-light label="Select existing type" on-paper-dropdown-close="validate" value="{{type}}" noink no-animations>
 
-                </paper-dropdown-menu-light>
-              </div>
-            </div>
+                                  <paper-listbox slot="dropdown-content">
+                                      <template id="brandRepeater" is="dom-repeat" items="{{types}}">
+                                          <paper-item>{{item.name}}</paper-item>
+                                      </template>
+                                  </paper-listbox>
 
-            <br></br>
-            <template id="status" is="dom-if" if="{{loading}}">
-                <paper-progress indeterminate style="width:100%;"></paper-progress>
-            </template>
-            <paper-button  id="submitBTN" disabled raised  on-click="save" > <b>Sumbit</b> </paper-button>
-          </div>
+                              </paper-dropdown-menu-light>
+                          </div>
+                      </div>
 
-        </div>
+                      <br></br>
+                      <template id="status" is="dom-if" if="{{loading}}">
+                          <paper-progress indeterminate style="width:100%;"></paper-progress>
+                      </template>
+                      <paper-button  id="submitBTN" disabled raised  on-click="save" > <b>Sumbit</b> </paper-button>
+                  </div>
+
+              </iron-collapse>
+
 
         <iron-ajax id="ironEQ"
                    url="{{url}}{{path}}"
@@ -127,14 +127,18 @@
 
          static get properties() {
              return {
+                 title: {
+                   value: 'Add equipment',
+                   type: String
+                 },
                  model: String,
                  type:{
                    type: String,
-                   observer: "_selected",
+                   observer: '_selected',
                  },
                  brand: {
                    type: String,
-                   observer: "_selected",
+                   observer: '_selected',
                  },
 
                  description: String,
@@ -148,15 +152,15 @@
                    type: Array,
                  },
                  dropdowns: Boolean,
-								 path: String,
-								 method: {
-												 value: "post",
-												 type: String,
-								 },
+                    path: String,
+                    method: {
+                     value: 'post',
+                        type: String,
+                    },
                  path: {
-                     value: "equipment",
+                     value: 'equipment',
                      type: String,
-                 }
+                 },
              };
          }
 
@@ -164,9 +168,6 @@
            super.ready();
            Polymer.dom(this.root).querySelector('#ironBrand').generateRequest();
            Polymer.dom(this.root).querySelector('#ironType').generateRequest();
-				   if (this.update) {
-									 
-					 }
         }
 
          save() {
@@ -193,10 +194,10 @@
          }
 
          clearFields() {
-             this.model = "";
-             this.type = "";
-             this.brand = "";
-             this.description = "";
+             this.model = '';
+             this.type = '';
+             this.brand = '';
+             this.description = '';
          }
 
          handleBrands(response) {
@@ -209,9 +210,9 @@
 
          validate() {
            if ((this.model != undefined && this.dropdowns)) {
-            Polymer.dom(this.root).querySelector("#submitBTN").disabled = false;
+            Polymer.dom(this.root).querySelector('#submitBTN').disabled = false;
           } else {
-            Polymer.dom(this.root).querySelector("#submitBTN").disabled = true;
+            Polymer.dom(this.root).querySelector('#submitBTN').disabled = true;
           }
          }
 
@@ -222,7 +223,17 @@
            }
          }
 
-     };
-     window.customElements.define(AddEquipment.is, AddEquipment);
+         open() {
+             var element = Polymer.dom(this.root).querySelector('#collapse');
+             var icon = Polymer.dom(this.root).querySelector('#expandIcon');
+             element.toggle();
+             if (element.opened) {
+                 icon.icon = 'icons:expand-less';
+             } else {
+                 icon.icon = 'icons:expand-more';
+             }
+         }
+        };
+        window.customElements.define(AddEquipment.is, AddEquipment);
     </script>
 </dom-module>

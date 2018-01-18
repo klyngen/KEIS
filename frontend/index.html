@@ -95,6 +95,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- Load your application shell -->
     <link rel="import" href="src/my-app.html">
+
+    <link rel="import" href="src/equipment-interface.html">
+
     <link rel="import" href="src/add-equipment.html">
     <link rel="import" href="src/equipment-search.html">
     <link rel="import" href="src/delete-instance.html">
@@ -114,7 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
   </head>
   <body>
-
+    <equipment-interface url="http://localhost:8000/api/"></equipment-interface>
     <div class="container">
       <user-search url="http://localhost:8000/api/"></user-search>
       <delete-instance url="http://localhost:8000/api/" path="instance"></delete-instance>

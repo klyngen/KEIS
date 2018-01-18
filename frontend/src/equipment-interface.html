@@ -1,0 +1,93 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
+<link href="../bower_components/iron-icon/iron-icon.html" rel="import"/>
+<link href="../bower_components/iron-icons/iron-icons.html" rel="import"/>
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="add-equipment.html">
+<link rel="import" href="equipment-list.html">
+<link rel="import" href="add-instance.html">
+<link rel="import" href="delete-instance.html">
+
+<dom-module id ="equipment-interface">
+    <template>
+
+        <style include="granite-bootstrap">
+            .editScreen
+            {
+                position:relative;
+            }
+            .editScreen:after
+            {
+                content: '';
+                position: absolute;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                z-index:1;
+                background: rgba(0, 0, 0, 0.3);
+            }
+        </style>
+
+
+        <!-- HTML TEMPLATE -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-5">
+                    <add-equipment url ="{{url}}"></add-equipment>
+                    <equipment-search selected="{{selected}}" url="{{url}}"></equipment-search>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="card editScreen">
+                        <div class="card-body">
+                            <h2 class="card-title">Manage Equipment</h2>
+                            <ul class="list-group">
+
+                                <add-equipment class="list-group-item list-group-item-action flex-column align-items-start"
+                                        title="Update Equipment"
+                                        url="{{url}}"
+                                        description="{{data.Description}}"
+                                        type="{{data.types}}"
+                                        brand="{{data.brands}}"
+                                        model="{{data.model}}"
+                                        path="equipment/[[selected]]"
+                                        method="put"
+                                ></add-equipment>
+
+                                <add-instance class="list-group-item list-group-item-action flex-column align-items-start"></add-instance>
+
+                                <delete-instance class="list-group-item list-group-item-action flex-column align-items-start" url="[[url]]"></delete-instance>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </template>
+
+
+    <script>
+
+        class EquipmentInterface extends Polymer.Element {
+            static get is() {
+                return 'equipment-interface';
+            }
+
+            static get properties() {
+                return {
+                    data: {
+                        type: Object,
+                    },
+                    url: String,
+                    selected: Number,
+                };
+            }
+        }
+
+        window.customElements.define(EquipmentInterface.is, EquipmentInterface);
+    </script>
+</dom-module>

@@ -13,11 +13,10 @@
     <style include="granite-bootstrap">
 
     </style>
+    <p>{{selected}}</p>
+    <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
 
-
-      <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-
-    <equipment-list url="{{url}}" listitems="{{listitems}}"></equipment-list>
+    <equipment-list selected="{{selected}}" url="{{url}}" listitems="{{listitems}}"></equipment-list>
 
     <iron-ajax id="ironEquipment"
         url="{{url}}equipment"
@@ -46,6 +45,7 @@
           alertStatus: String,
           alertText: String,
           url: String,
+            selected: Number
         };
       }
 

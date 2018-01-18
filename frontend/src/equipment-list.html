@@ -40,28 +40,42 @@
 
 
 
-
-        <template id="list" is="dom-repeat" items="{{listitems}}">
-            <equipment-item url="{{url}}" data="{{item}}"></equipment-item>
-        </template>
+        <div class="list-group">
+            <template id="list" is="dom-repeat" items="{{listitems}}">
+                <equipment-item id="[[item.id]]" on-click="select" url="{{url}}" data="{{item}}"></equipment-item>
+            </template>
+        </div>
 
     </template>
 
 
     <script>
+        class EquipmentList extends Polymer.Element {
+            static get is() {return 'equipment-list';}
 
-     class EquipmentList extends Polymer.Element {
-         static get is() {return 'equipment-list';}
-
-         static get properties() {
-             return {
-                 listitems : {
-                     type: Array,
-                 },
-                 url: String,
+            static get properties() {
+                return {
+                    listitems : {
+                        type: Array,
+                    },
+                    url: String,
+                    selected: Number,
+                    selectedElem: Object
              };
-         }
-     };
-     window.customElements.define(EquipmentList.is, EquipmentList);
+            }
+
+            select(e) {
+                if (this.selectedElem !== undefined) {
+                    this.selectedElem.toggle();
+                }
+
+
+                this.selected = e.target.id;
+                this.selectedElem = e.target;
+                e.target.toggle();
+
+            }
+        };
+        window.customElements.define(EquipmentList.is, EquipmentList);
     </script>
 </dom-module>

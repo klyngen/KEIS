@@ -7,78 +7,25 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+
 
 
 <dom-module id ="equipment-item">
     <template>
 
         <style include="granite-bootstrap">
-         #full-list {
-         }
-         .card-custom-header {
-             background-color: rgba(0, 0, 0, 0.4);
-             color: white;
-             text-align: center;
-             font-weight: bold;
-             display:block;
-             padding: 1px;
-             margin: 0px;
-				
-         }
-         paper-button {
-             width: 100%;
-             font-weight: bold;
-             margin-bottom: 10px;
-         }
-         .card { margin-top: 3px;}
-
-         #small b { margin-left: 5px; }
-         #small {text-align: center;}
 
         </style>
 
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-8 col-sm-6">
-                            <h5 class="card-title">{{data.brands}} - {{data.model}}</h5>
-                            <p>{{data.Description}}</p>
-                        </div>
-                        <div id="small" class="col-md-4 col-sm-6">
-                            <p>
-                                <b>Rented:</b> {{data.rented}} <b>Available:</b> {{data.available}} <b>Total:</b> {{data.total}}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+            <div id="item" class="list-group-item list-group-item-action flex-column align-items-start">
+                <h5 class="card-title">{{data.brands}} - {{data.model}}</h5>
+                <p>{{data.Description}}</p>
 
-                <div id="full-list">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <paper-button raised on-click="update">Edit equipment data</paper-button>
-                                <iron-collapse id="update">
-                                    <add-equipment
-                                            url="{{url}}"
-                                            description="{{data.Description}}"
-                                            type="{{data.types}}"
-                                            brand="{{data.brands}}"
-                                            model="{{data.model}}"
-                                            path="equipment/{{data.id}}"
-                                            method="put"
-                                    ></add-equipment>
-                                </iron-collapse>
-                        </li>
-                        <li class="list-group-item">
-                            <add-instance url="{{url}}" equipment="{{data.id}}" path="instance"></add-instance>
-                        </li>
-                        <li class="list-group-item">
-                            
-                        </li>
-                    </ul>
-                </div>
-                <a on-click="toggle"><h5 class="card-custom-header">More<iron-icon icon="icons:expand-more"></iron-icon></h5></a>
+                <span class="badge badge-danger">Rented [[data.rented]]</span>
+                <span class="badge badge-success">Available [[data.available]]</span>
+                <span class="badge badge-info">Total [[data.total]]</span>
             </div>
+
 
     </template>
 
@@ -94,28 +41,23 @@
                      type: Object,
                  },
                  url: String,
+                 selected: {
+                     type: Boolean,
+                     value: false,
+                 },
              };
          }
 
-         ready () {
-             super.ready();
-             Polymer.dom(this.root).querySelector("#full-list").style.display = "none";
-             
-         }
-
          toggle() {
-             var item = Polymer.dom(this.root).querySelector("#full-list");
-             if (item.style.display === "none") {
-                 (item.style.display = "block");
+             var card = Polymer.dom(this.root).querySelector('#item');
+             if (this.selected) {
+                 card.classList.remove('active');
+                 this.selected = false;
              } else {
-                 item.style.display = "none";
+                 card.classList.add('active');
+                 this.selected = true;
              }
          }
-
-				update() {
-                    Polymer.dom(this.root).querySelector("#update").toggle();
-				}	
-
      };
      window.customElements.define(EquipmentItem.is, EquipmentItem);
     </script>

@@ -2,9 +2,11 @@
 <link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
 <link href="../bower_components/iron-icon/iron-icon.html" rel="import"/>
 <link href="../bower_components/iron-icons/iron-icons.html" rel="import"/>
+<link href="../bower_components/iron-collapse/iron-collapse.html" rel="import"/>
 <link rel="import" href="../bower_components/polymer/polymer-element.html">æ
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+
 
 <dom-module id ="delete-instance">
     <template>
@@ -17,15 +19,15 @@
                 font-weight: bold;
             }
         </style>
-
-        <div class="card">
-            <div class="card-body">
+        <h4 on-click="toggle" class="card-title">Delete Instance <iron-icon id="icon" icon="icons:expand-more"></iron-icon></h4>
+        <iron-collapse id="collapse">
+            <div>
                 <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-                <h4 class="card-title">Delete Instance</h4>
+
                 <paper-input value="{{rfid}}" label="RFID"></paper-input>
                 <paper-button raised class="red" on-click="submit">delete</paper-button>
             </div>
-        </div>
+        </iron-collapse>
 
         <iron-ajax id="ironEQ"
                    url="{{url}}{{path}}"
@@ -78,6 +80,17 @@
 
             submit() {
                 Polymer.dom(this.root).querySelector("#ironEQ").generateRequest();
+            }
+
+            toggle() {
+                var collapse = Polymer.dom(this.root).querySelector("#collapse");
+                var icon = Polymer.dom(this.root).querySelector("#icon");
+                collapse.toggle();
+                if (collapse.opened) {
+                    icon.icon = 'icons:expand-less';
+                } else {
+                    icon.icon = 'icons:expand-more';
+                }
             }
         }
 

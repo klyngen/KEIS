@@ -35,23 +35,17 @@
                 font-weight: bold;
             }
         </style>
-        <paper-button on-click="toggle" raised>Add new instance</paper-button>
-        <iron-collapse id="collapse">
-        <div class="card">
-                <div class="card-body">
-                    <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-                    <h4 class="card-title">Add instance</h4>
-                    <iron-label>
-                        <span>Condition</span>
-                        <paper-slider max="10" value="{{condition}}" editable></paper-slider>
-                    </iron-label>
-                    <vaadin-date-picker label="purchase time" value="{{purchase}}"></vaadin-date-picker>
-                    <paper-input value="{{rfid}}" label="RFID" required auto-validate error-message="This field is required"></paper-input>
-                </div>
-            </div>
-            <paper-button id="submit" on-click="submit" disabled raised>Submit</paper-buttono>
-        </iron-collapse>
-
+            <h5 on-click="toggle">Add instance<iron-icon id="expandIcon" icon="icons:expand-more"></iron-icon></h5>
+            <iron-collapse id="collapse">
+                <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+                <iron-label>
+                    <span>Condition</span>
+                    <paper-slider max="10" value="{{condition}}" editable></paper-slider>
+                </iron-label>
+                <vaadin-date-picker label="purchase time" value="{{purchase}}"></vaadin-date-picker>
+                <paper-input value="{{rfid}}" label="RFID" required auto-validate error-message="This field is required"></paper-input>
+                    <paper-button id="submit" on-click="submit" disabled raised>Submit</paper-button>
+            </iron-collapse>
         <iron-ajax id="ironEQ"
                    url="{{url}}{{path}}"
                    method="{{method}}"
@@ -126,7 +120,16 @@
             }
 
             toggle() {
-                Polymer.dom(this.root).querySelector("#collapse").toggle();
+                var element = Polymer.dom(this.root).querySelector("#collapse");
+                var icon = Polymer.dom(this.root).querySelector("#expandIcon");
+                element.toggle();
+
+                if (element.opened) {
+                    icon.icon = "icons:expand-less";
+                } else {
+                    icon.icon = "icons:expand-more";
+                }
+
             }
 
             submit() {
