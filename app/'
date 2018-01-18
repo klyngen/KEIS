@@ -29,17 +29,16 @@ class Equipment extends Model
     }
 
     public function getAvailableAttribute() {
-        $available = Instance::where('rented', '=', 0)->where('equipment', '=', $this->attributes['id'])->count();
-        error_log($available);
+        $available = Instance::where('rented', '=', 0)->where('id', '=', $this->attributes['id'])->count();
         return $available;
     }
 
     public function getTotalAttribute() {
-        return Instance::where('equipment', '=', $this->attributes['id'])->count();
+        return 5;
     }
 
     public function getRentedAttribute() {
-        $rented = Instance::where('rented', '=', 1)->where('equipment', '=', $this->attributes['id'])->count();
+        $rented = Instance::where('rented', '=', 1)->where('id', '=', $this->attributes['id'])->count();
         return $rented;
     }
 

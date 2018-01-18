@@ -19,25 +19,34 @@ class EquipmentController extends Controller {
     }
 
     public function store(Request $request) {
-        $data = $request->json()->all();
-        //return Array($request->input('model'));
 
         $brand = BrandController::solveDependence($request->input('brand'));
         $type = TypeController::solveDependence($request->input('type'));
-        //return $brand;
 
-        $eq = Equipment::create(Array("brands"=>$brand,
-            "types"=>$type,
-            "description"=>$request->input('description'),
-            "model"=>$request->input("model")));
 
-        return response()->json($eq, 201);
+        if ($brand == null) {
+          return response()->json(["error"=>"missing brand"], 400);
+        }
+
+        if ($type == null) {
+          return response()->json(["error"=>"missing type"], 400);
+        }
+
+        try {
+          $eq = Equipment::create(Array("brands"=>$brand,
+              "types"=>$type,
+              "description"=>$request->input('description'),
+              "model"=>$request->input("model")));
+        } catch (Exception $e) {
+            return response()->json(["error"=>"malformed request: $e"], 400);
+        }
+
+
+        return response()->json(["success"=>"equipment added"], 201);
     }
 
     public function update(Request $request, $id) {
       $eq = Equipment::findOrFail($id);
-
-      //$eq->update($request->all());
 
       $brand = BrandController::solveDependence($request->input('brand'));
       $type = TypeController::solveDependence($request->input('type'));
@@ -45,11 +54,9 @@ class EquipmentController extends Controller {
       $eq->update(Array('brands'=>$brand,
       'types'=>$type,
       'description'=>$request->input('description'),
-      'modhttps://www.google.com/search?q=laravel+builder+count&ie=utf-8&oe=utf-8&client=firefox-b-abel'=>$request->input('model')));
+      'model'=>$request->input('model')));
 
-
-
-      return response()->json($eq, 200);
+      return response()->json(["success"=>"equipment updated"], 200);
     }
 
     public function delete(Request $request, $id) {

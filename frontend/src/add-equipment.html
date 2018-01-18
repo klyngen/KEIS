@@ -2,20 +2,121 @@
 <link href="../bower_components/paper-input/paper-input.html" rel="import"/>
 <link href="../bower_components/paper-input/paper-textarea.html" rel="import"/>
 <link href="../bower_components/paper-button/paper-button.html" rel="import"/>
-<link rel="import" href="shared-styles.html">
+<link href="../bower_components/paper-input/paper-input-container.html" rel="import"/>
+<link href="../bower_components/paper-dropdown-menu/paper-dropdown-menu-light.html" rel="import"/>
+<link href="../bower_components/paper-listbox/paper-listbox.html" rel="import"/>
+<link href="../bower_components/neon-animation/web-animations.html" rel="import"/>
+<link href="../bower_components/paper-item/paper-item.html" rel="import"/>
+<link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
+<link href="../bower_components/iron-ajax/iron-ajax.html" rel="import"/>
+<link href="../bower_components/paper-progress/paper-progress.html" rel="import"/>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="./klingen-notify.html">
+
 
 <dom-module id="add-equipment">
     <template>
-        <style>
+        <style include="granite-bootstrap">
+          #submitBTN {
+            width: 100%;
+          }
         </style>
-        <div class="container">
-          <paper-input label="Model" value="{{model}}"></paper-input>
-          <paper-input label="Type" value="{{type}}"></paper-input>
-          <paper-input label="Brand" value="{{brand}}"></paper-input>
-          <paper-textarea label="Description" value="{{description}}"></paper-textarea>
-          <paper-button on-click="save"> <b>Sumbit</b> </paper-button>
+        <div class="card">
+
+          <div class="card-body">
+            <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+            <h4 class="card-title">Add new equipment</h4>
+            <p class="card-text">
+              Add a new type of equipment to the system. Feel free to use dropdowns for
+              name and type. This is for correct spelling that leads to better results in searches.
+              Note that it is neccessary to also add an instance of this equipment before it is possible
+              to rent out the equipment.
+            </p>
+            <paper-input label="Model" value="{{model}}" required auto-validate error-message="This field is required" on-input="validate"></paper-input>
+            <paper-textarea label="Description" value="{{description}}"></paper-textarea>
+            <div class="row">
+              <div class="col-sm-7 col-md-8 col-xs-6">
+                <paper-input label="Brand" value="{{brand}}" class="share" required auto-validate error-message="This field is required" on-input="validate"></paper-input>
+              </div>
+
+              <div class="col-sm-5 col-md-4 col-xs-6">
+                <paper-dropdown-menu-light label="Select existing brand" value="{{brand}}" on-paper-dropdown-close="validate" noink no-animations>
+                  <paper-listbox slot="dropdown-content">
+                    <template id="brandRepeater" is="dom-repeat" items="{{brands}}">
+                      <paper-item>{{item.name}}</paper-item>
+                    </template>
+                  </paper-listbox>
+                </paper-dropdown-menu-light>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-7 col-md-8 col-xs-6">
+                <paper-input label="Type" value="{{type}}" class="share" required auto-validate error-message="This field is required" on-value-changed="validate"></paper-input>
+              </div>
+
+              <div class="col-sm-4 col-md-4 col-xs-6">
+                <paper-dropdown-menu-light label="Select existing type" on-paper-dropdown-close="validate" value="{{type}}" noink no-animations>
+
+                  <paper-listbox slot="dropdown-content">
+                    <template id="brandRepeater" is="dom-repeat" items="{{types}}">
+                      <paper-item>{{item.name}}</paper-item>
+                    </template>
+                  </paper-listbox>
+
+                </paper-dropdown-menu-light>
+              </div>
+            </div>
+
+            <br></br>
+            <template id="status" is="dom-if" if="{{loading}}">
+                <paper-progress indeterminate style="width:100%;"></paper-progress>
+            </template>
+            <paper-button  id="submitBTN" disabled raised  on-click="save" > <b>Sumbit</b> </paper-button>
+          </div>
+
         </div>
 
+        <iron-ajax id="ironEQ"
+                   url="{{url}}{{path}}"
+                   method="{{method}}"
+                    loading="{{loading}}"
+            body='{
+    "model": "{{model}}",
+    "type": "{{type}}",
+    "brand": "{{brand}}",
+    "description": "{{description}}"
+}'
+            handle-as="json"
+            on-response="handleResponse"
+            on-error="handleErrorResponse"
+            content-type="application/json"
+            cross-domain = "true"
+            debounce-duration="300">
+        </iron-ajax>
+
+        <iron-ajax id="ironBrand"
+            url="{{url}}brand"
+            method="get"
+            handle-as="json"
+            on-response="handleBrands"
+            on-error="handleErrorResponse"
+            content-type="application/json"
+            cross-domain = "true"
+            debounce-duration="300">
+        </iron-ajax>
+
+        <iron-ajax id="ironType"
+            url="{{url}}type"
+            method="get"
+            handle-as="json"
+            on-response="handleTypes"
+            on-error="handleErrorResponse"
+            content-type="application/json"
+            cross-domain = "true"
+            debounce-duration="300">
+        </iron-ajax>
+	
     </template>
 
 
@@ -27,14 +128,68 @@
          static get properties() {
              return {
                  model: String,
-                 type: String,
-                 brand: String,
+                 type:{
+                   type: String,
+                   observer: "_selected",
+                 },
+                 brand: {
+                   type: String,
+                   observer: "_selected",
+                 },
+
                  description: String,
+                 url: String,
+                 alertStatus: String,
+                 alertText: String,
+                 brands: {
+                   type: Array,
+                 },
+                 types: {
+                   type: Array,
+                 },
+                 dropdowns: Boolean,
+								 path: String,
+								 method: {
+												 value: "post",
+												 type: String,
+								 },
+                 path: {
+                     value: "equipment",
+                     type: String,
+                 }
              };
          }
 
+         ready() {
+           super.ready();
+           Polymer.dom(this.root).querySelector('#ironBrand').generateRequest();
+           Polymer.dom(this.root).querySelector('#ironType').generateRequest();
+				   if (this.update) {
+									 
+					 }
+        }
+
          save() {
-             console.log(this.model);
+             var iron = Polymer.dom(this.root).querySelector("#ironEQ");
+             iron.generateRequest();
+             Polymer.dom(this.root).querySelector('#ironBrand').generateRequest();
+             Polymer.dom(this.root).querySelector('#ironType').generateRequest();
+
+             if(this.method !== "put")
+                 this.clearFields();
+         }
+
+         handleResponse(response) {
+           Polymer.dom(this.root).querySelector("#notify").addNotification();
+           this.alertText = response.detail.response.success;
+           this.alertStatus = "success";
+
+         }
+
+         handleErrorResponse(response) {
+             Polymer.dom(this.root).querySelector("#notify").addNotification();
+             this.alertText = response.detail.request.xhr.response.error;
+             this.alertStatus = "danger";
          }
 
          clearFields() {
@@ -42,6 +197,29 @@
              this.type = "";
              this.brand = "";
              this.description = "";
+         }
+
+         handleBrands(response) {
+           this.brands = response.detail.response;
+         }
+
+         handleTypes(response) {
+           this.types = response.detail.response;
+         }
+
+         validate() {
+           if ((this.model != undefined && this.dropdowns)) {
+            Polymer.dom(this.root).querySelector("#submitBTN").disabled = false;
+          } else {
+            Polymer.dom(this.root).querySelector("#submitBTN").disabled = true;
+          }
+         }
+
+         _selected() {
+           if (this.brand !== undefined && this.type !== undefined) {
+             this.dropdowns = true;
+             this.validate();
+           }
          }
 
      };

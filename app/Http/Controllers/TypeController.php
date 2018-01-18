@@ -10,6 +10,10 @@ class TypeController extends Controller
     public static function solveDependence($name) {
       $type = Type::select('id')->where('name', strtoupper($name))->get();
 
+      if (count($name) < 1) {
+        return null;
+      }
+
       if ($type->isNotEmpty()) {
         return $type[0]->id;
       }
@@ -18,7 +22,7 @@ class TypeController extends Controller
     }
 
     public function index() {
-        return resonse()->json(Brand::all(), 200);
+        return response()->json(Type::all(), 200);
     }
 
 }

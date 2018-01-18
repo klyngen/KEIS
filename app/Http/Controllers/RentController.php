@@ -36,11 +36,18 @@ class RentController extends Controller
         $rent = Rent::create(['users'=>$user->id,
                       'instances'=>$instance->id,]);
 
+        $instance->rented = 1;
+        $instance->save();
+
         return response()->json($rent->id, 201);
     }
 
     public function deliver(Request $request, $id) {
         $rent = Rent::where('id', $id)->first();
+        $instance = Instance::where('id', '=', 'instances')->first();
+        $instance->rented = 0;
+
+        $instance->save();
 
         $now = Carbon::now();
 
@@ -53,42 +60,22 @@ class RentController extends Controller
 
 
     public function isAlreadyRented($id) {
-        $rented = Rent::where(['instances'=> $id])->whereNull('stop')->get();
-        return $rented->isNotEmpty();
+        $instance = Instance::where('id', '=', $id)->fist();
+        if ($instance == null) {
+            return true;
+        }
+        return $instance->rented;
     }
 
     public function statistics(Request $request) {
-        return response()->json($this->notRented(), 200);
+        $rented = Instance::where('rented', '=', 1)->count();
+        $available = Instance::where('rented', '=', 0)->count();
+
+        $week = Carbon::now()->addWeeks(-1)->toDateTimeString();
+
+        $long = Instance::where('rented', '=', 1)
+              ->join('rent', 'rent.instances', '=', 'instances.id')->having('created_at', '<', $week)->count();
+        return response()->json(['rented'=>$rented, 'available'=>$available, 'long'=>$long]);
     }
 
-    public function getRented() {
-        $instances = Instance::select(['instances.*', 'rents.stop', 'rents.id AS rid', 'equipment.model', 'equipment.types', 'equipment.brands'])
-                   ->join('equipment', 'equipment.id', '=', 'instances.equipment')
-                   ->join('rents', function ($join) {
-                       $join->on('rents.instances', '=', 'instances.id')
-                           ->whereNull('stop');
-                   })->get();
-        return $instances;
-    }
-
-    public function notRented() {
-        $rented =  $this->getRented()->toArray();
-        $all = Instance::join('equipment', 'equipment.id', '=', 'instances.equipment')
-             ->get()
-             ->toArray();
-
-        //dd($all);
-
-        for($ar = 0; $ar < count($all); $ar++) {
-            for ($rr = 0; $rr < count($rented); $rr++) {
-                 if ($all[$ar]['id'] == $rented[$rr]['id']) {
-                     //dd("something unsetted");
-                    unset($all[$ar]);
-                    break;
-                }
-            }
-        }
-
-        return Array(["rented"=>$rented, "available"=>$all]);
-    }
 }

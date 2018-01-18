@@ -10,6 +10,10 @@ class BrandController extends Controller
     public static function solveDependence($b) {
       $brand = Brand::select('id')->where('name', strtoupper($b))->get();
 
+      if (count($b) < 1) {
+        return null;
+      }
+
       if ($brand->isNotEmpty()) {
         return $brand[0]->id;
       }

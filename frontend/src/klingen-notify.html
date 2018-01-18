@@ -1,0 +1,53 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
+
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="klingen-notify">
+
+  <template>
+    <style include="granite-bootstrap">
+      .hidden {
+
+      }
+    </style>
+
+    <div id="alert" role="alert"  class$="alert alert-[[status]]">
+      <button type="button" class="close" on-click="hide" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <strong>{{status}}: </strong> {{text}}
+    </div>
+  </template>
+
+
+  <script>
+    class KlingenNotify extends Polymer.Element {
+      static get is() {return 'klingen-notify';}
+
+    static get properties() {
+      return {
+        status: String,
+        text: String,
+      };}
+
+      ready () {
+        super.ready();
+        this.hide();
+      }
+
+      addNotification() {
+        Polymer.dom(this.root).querySelector("#alert").style.display = "block";
+      }
+
+      hide() {
+        Polymer.dom(this.root).querySelector("#alert").style.display = "none";
+      }
+    };
+
+    window.customElements.define(KlingenNotify.is, KlingenNotify);
+
+  </script>
+</dom-module>

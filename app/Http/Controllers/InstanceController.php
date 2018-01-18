@@ -20,14 +20,14 @@ class InstanceController extends Controller
     public function store(Request $request) {
       $result = $this->createDataArray($request);
 
-      //dd($result);
-
       if (is_array($result)) {
-        $instance = Instance::create($result);
-        return response()->json($instance->id, 201);
+          $instance = Instance::create($result);
+          return response()->json(["success"=>"instance added"], 201);
+      } else {
+          return response()->json(["error"=>$result], 400);
       }
 
-      return response()->json($result, 400);
+
     }
 
     public function RFIDExists($rfid) {
@@ -57,12 +57,12 @@ class InstanceController extends Controller
 
       // See if equipment exists
       if (!$id->isNotEmpty()) {
-        return response()->json(Array("error"=>"Non-existent equipment-id"), 404);
+        return "Non-existent equipment-id";
       }
 
       // See if RFID exists
       if ($this->RFIDExists($request->input('RFID')) && !$update) {
-        return response()->json(Array("error"=>"RFID already exists"),400);
+        return "RFID already exists";
       }
 
       $id = $id[0]->id;
@@ -74,9 +74,14 @@ class InstanceController extends Controller
       return $instance;
     }
 
-    public function delete(Request $request, $id) {
-        $instance = Instance::findOrFail($id);
+    public function delete(Request $request) {
+        error_log($request->input("RFID"));
+        $instance = Instance::where('RFID', '=', $request->input("RFID"))->first();
+        if ($instance == null) {
+            return response()->json(["error"=>"could not find the instance"], 404);
+        }
         $instance->delete();
-        return response()->json(["success"=>"deleted the instance {$instance->id}"]);
+        return response()->json(["success"=>"deleted the instance with ID {$instance->id}"], 200);
     }
+
 }

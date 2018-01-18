@@ -1,0 +1,67 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
+<link href="../bower_components/iron-icon/iron-icon.html" rel="import"/>
+<link href="../bower_components/iron-icons/iron-icons.html" rel="import"/>
+<link href="./equipment-item.html" rel="import"/>
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+
+<dom-module id ="equipment-list">
+    <template>
+
+        <style include="granite-bootstrap">
+         #full-list {
+             border-left-style: solid;
+             border-left-width: 1px;
+             border-color: rgba(0, 0, 0, 0.125);
+             display: none;
+         }
+         .card-custom-header {
+             background-color: rgba(0, 0, 0, 0.4);
+             color: white;
+             text-align: center;
+             font-weight: bold;
+             display:block;
+             padding: 1px;
+             margin: 0px;
+         }
+         .card { margin-top: 3px;}
+
+         #small b { margin-left: 5px; }
+         #small {text-align: center;}
+
+         .alignright {float: right;
+             text-align: right;
+         }
+        </style>
+
+
+
+
+
+
+        <template id="list" is="dom-repeat" items="{{listitems}}">
+            <equipment-item url="{{url}}" data="{{item}}"></equipment-item>
+        </template>
+
+    </template>
+
+
+    <script>
+
+     class EquipmentList extends Polymer.Element {
+         static get is() {return 'equipment-list';}
+
+         static get properties() {
+             return {
+                 listitems : {
+                     type: Array,
+                 },
+                 url: String,
+             };
+         }
+     };
+     window.customElements.define(EquipmentList.is, EquipmentList);
+    </script>
+</dom-module>

@@ -1,0 +1,65 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
+<link href="../bower_components/iron-icon/iron-icon.html" rel="import"/>
+<link href="../bower_components/iron-icons/iron-icons.html" rel="import"/>
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link href="../bower_components/iron-collapse/iron-collapse.html" rel="import"/>
+
+
+
+<dom-module id ="user-search">
+    <template>
+
+        <style include="granite-bootstrap">
+            iron-icon {
+                display: none;
+            }
+        </style>
+        <paper-input value="{{number}}" label="student number"><iron-icon id="icon" slot="suffix" icon="icons:check"></iron-icon></paper-input>
+        <iron-collapse id="collapse">
+            <div>
+                <p>{{user.name}}</p>
+                <p>{{user.email}}</p>
+            </div>
+        </iron-collapse>
+
+        <iron-ajax
+                auto
+                url="{{url}}user/search/{{number}}"
+                handle-as="json"
+                on-response="handleResponse"
+                debounce-duration="300">
+        </iron-ajax>
+    </template>
+
+
+    <script>
+
+        class UserSearch extends Polymer.Element {
+            static get is() {
+                return 'user-search';
+            }
+
+            static get properties() {
+                return {
+                    url: String,
+                    number: String,
+                    user: Object,
+                };
+            }
+            handleResponse(response) {
+                if (response.detail.response.length === 1 && this.number === response.detail.response[0].studentNumber) {
+                    this.user = response.detail.response[0];
+                    Polymer.dom(this.root).querySelector("#collapse").show();
+                    Polymer.dom(this.root).querySelector("#icon").style.display = "block";
+                } else {
+                    Polymer.dom(this.root).querySelector("#collapse").hide();
+                    Polymer.dom(this.root).querySelector("#icon").style.display = "none";
+                }
+            }
+        }
+            window.customElements.define(UserSearch.is, UserSearch);
+    </script>
+</dom-module>

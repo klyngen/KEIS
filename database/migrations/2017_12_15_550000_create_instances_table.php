@@ -20,6 +20,7 @@ class CreateInstancesTable extends Migration
             $table->integer("equipment")->unsigned();
             $table->foreign('equipment')->references('id')->on('equipment');
             $table->char("RFID", 20)->unique();
+            $table->boolean("rented")->default(0);
             $table->timestamps();
         });
     }

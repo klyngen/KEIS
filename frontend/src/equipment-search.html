@@ -1,0 +1,71 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
+<link rel="import" href="./equipment-list.html">
+<link rel="import" href="./klingen-notify.html">
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+
+<dom-module id ="equipment-search">
+
+  <template>
+
+    <style include="granite-bootstrap">
+
+    </style>
+
+
+      <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+
+    <equipment-list url="{{url}}" listitems="{{listitems}}"></equipment-list>
+
+    <iron-ajax id="ironEquipment"
+        url="{{url}}equipment"
+        method="get"
+        handle-as="json"
+        on-response="handleResponse"
+        on-error="handleErrorResponse"
+        content-type="application/json"
+        cross-domain = "true"
+        debounce-duration="300">
+    </iron-ajax>
+
+  </template>
+
+
+  <script>
+
+    class EquipmentSearch extends Polymer.Element {
+      static get is() {return 'equipment-search';}
+
+      static get properties() {
+        return {
+          listitems: {
+            type: Array,
+          },
+          alertStatus: String,
+          alertText: String,
+          url: String,
+        };
+      }
+
+      ready() {
+        super.ready();
+        console.log(this.url);
+        Polymer.dom(this.root).querySelector("#ironEquipment").generateRequest();
+      }
+
+      handleResponse(response) {
+        console.log(response.detail.response);
+        this.listitems = response.detail.response;
+      }
+
+      handleErrorResponse(response) {
+        this.alertText = response.detail.request.xhr.response.error;
+        this.alertStatus = "error";
+      }
+
+    };
+    window.customElements.define(EquipmentSearch.is, EquipmentSearch);
+  </script>
+</dom-module>

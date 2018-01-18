@@ -28,7 +28,7 @@ Route::get('equipment/{id}/instance', 'InstanceController@getAllEquipment');
 // Instance functionality
 Route::post('instance', 'InstanceController@store');
 Route::put('instance/{id}', 'InstanceController@update');
-Route::delete('instance/{id}', 'InstanceController@delete');
+Route::delete('instance', 'InstanceController@delete');
 
 // Rent functionality
 Route::get('rent', 'RentController@index');
@@ -43,7 +43,7 @@ Route::get('user/{id}', 'UserController@show');
 Route::delete('user/{id}', 'UserController@delete');
 Route::post('user', 'UserController@store');
 Route::get('user/activerent/{id}', 'UserController@activeRent'); 
-
+Route::get('user/search/{id}', 'UserController@findUserById');
 
 // Get brands and types
 Route::get('brand', 'BrandController@index');

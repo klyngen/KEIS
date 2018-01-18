@@ -36,11 +36,14 @@ class UserController extends Controller
         }
 
 
-        $user = User::create(['name'=>$request->input('name'),
-                              'studentNumber'=>$request->input('studentNumber'),
-                              'email'=>$request->input('email')]);
-
-        return response()->json($user->id, 201);
+        try {
+            User::create(['name' => $request->input('name'),
+                'studentNumber' => $request->input('studentNumber'),
+                'email' => $request->input('email')]);
+            return response()->json(["success"=>"user created"], 201);
+        } catch (Exception $e) {
+            return response()->json(["error"=>"could not add user"], 404);
+        }
     }
 
     public function activeRent($id) {
@@ -52,7 +55,18 @@ class UserController extends Controller
               ->join('instances', 'rents.instances', "=", "instances.id")
               ->join('equipment', 'instances.equipment', "=", "equipment.id")->get();
 
-        return response()->json($rent, 200);return response()->json($rent, 200);
+        return response()->json($rent, 200);
+    }
+
+    public function findUserById(Request $request, $id) {
+        $users = User::where('studentNumber', 'like', "$id%")->get();
+
+        if ($users != null) {
+            return response()->json($users, 200);
+        }
+
+        return response()->json(['error'=>'could not find user'], 412);
+
     }
 
 }
