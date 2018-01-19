@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Equipment;
+use Mockery\Exception;
 
 
 class EquipmentController extends Controller {
@@ -61,7 +62,12 @@ class EquipmentController extends Controller {
 
     public function delete(Request $request, $id) {
       $eq = Equipment::findOrFail($id);
-      $eq->delete();
+      try {
+          $eq->delete();
+      } catch (Exception $e) {
+          return response()->json(["error"=>"could not delete equipment. Remember that there cannot be any instances left"], 500);
+      }
+
 
       return response()->json(Array("success"=>"Item delet"), 204);
     }

@@ -16,8 +16,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
     <title>KEIS</title>
-    <meta name="description" content="My App description">
-
+    <meta name="description" content="Klingenbergs Equipment Indexing System">
+      <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="bower_components/polymer/polymer-element.html">
     <!--
       The `<base>` tag below is present to support two advanced deployment options:
       1) Differential serving. 2) Serving from a non-root path.
@@ -40,12 +41,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="My App">
+    <meta name="application-name" content="KEIS">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="My App">
+    <meta name="apple-mobile-web-app-title" content="KEIS">
 
     <!-- Homescreen icons -->
     <link rel="apple-touch-icon" href="images/manifest/icon-48x48.png">
@@ -59,28 +60,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="msapplication-TileColor" content="#3f51b5">
     <meta name="msapplication-tap-highlight" content="no">
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
 
 
     <script>
       /**
       * [polymer-root-path]
       *
-      * By default, we set `Polymer.rootPath` to the server root path (`/`).
-      * Leave this line unchanged if you intend to serve your app from the root
-      * path (e.g., with URLs like `my.domain/` and `my.domain/view1`).
+      * by default, we set `polymer.rootpath` to the server root path (`/`).
+      * leave this line unchanged if you intend to serve your app from the root
+      * path (e.g., with urls like `my.domain/` and `my.domain/view1`).
       *
-      * If you intend to serve your app from a non-root path (e.g., with URLs
+      * if you intend to serve your app from a non-root path (e.g., with urls
       * like `my.domain/my-app/` and `my.domain/my-app/view1`), edit this line
       * to indicate the path from which you'll be serving, including leading
       * and trailing slashes (e.g., `/my-app/`).
       */
-      window.Polymer = {rootPath: '/'};
+      window.polymer = {rootpath: '/'};
 
-      // Load and register pre-caching Service Worker
+      // load and register pre-caching service worker
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('service-worker.js', {
@@ -93,18 +91,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
     <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
+
+      <link rel="import" href="./src/keis-app.html">
+      <link rel="import" href="./src/user-search.html">
+      <link rel="import" href="./src/equipment-interface.html">
+
     <!-- Load your application shell -->
-    <link rel="import" href="src/my-app.html">
-
-    <link rel="import" href="src/equipment-interface.html">
-
-    <link rel="import" href="src/add-equipment.html">
-    <link rel="import" href="src/equipment-search.html">
-    <link rel="import" href="src/delete-instance.html">
-    <link rel="import" href="src/user-search.html">
-
-    <link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
-
     <!-- Add any global styles for body, document, etc. -->
     <style>
       body {
@@ -117,19 +109,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
   </head>
   <body>
-    <equipment-interface url="http://localhost:8000/api/"></equipment-interface>
-    <div class="container">
-      <user-search url="http://localhost:8000/api/"></user-search>
-      <delete-instance url="http://localhost:8000/api/" path="instance"></delete-instance>
-      <equipment-search url="http://localhost:8000/api/"></equipment-search>
-      <add-equipment url="http://localhost:8000/api/"></add-equipment>
-    </div>
 
-
-
+    <keis-app url="http://localhost:8000/api/"></keis-app>
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>
     <!-- Built with love using Polymer Starter Kit -->
+
+
   </body>
 </html>

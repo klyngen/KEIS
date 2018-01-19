@@ -8,6 +8,7 @@
 <link rel="import" href="equipment-list.html">
 <link rel="import" href="add-instance.html">
 <link rel="import" href="delete-instance.html">
+<link rel="import" href="delete-equipment.html">
 
 <dom-module id ="equipment-interface">
     <template>
@@ -17,7 +18,7 @@
             {
                 position:relative;
             }
-            .editScreen:after
+            .editScreen
             {
                 content: '';
                 position: absolute;
@@ -40,9 +41,8 @@
                 </div>
 
                 <div class="col-md-7">
-                    <div class="card editScreen">
+                    <div class="card">
                         <div class="card-body">
-                            <h2 class="card-title">Manage Equipment</h2>
                             <ul class="list-group">
 
                                 <add-equipment class="list-group-item list-group-item-action flex-column align-items-start"
@@ -59,6 +59,8 @@
                                 <add-instance class="list-group-item list-group-item-action flex-column align-items-start"></add-instance>
 
                                 <delete-instance class="list-group-item list-group-item-action flex-column align-items-start" url="[[url]]"></delete-instance>
+
+                                <delete-equipment class="list-group-item list-group-item-action flex-column align-items-start" id="{{selected}}" url="{{url}}"></delete-equipment>
                             </ul>
                         </div>
                     </div>

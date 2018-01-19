@@ -1,0 +1,64 @@
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../demo/sample-content.html">
+<link rel="import" href="../bower_components/app-layout/app-layout.html">
+<link rel="stylesheet" href="equipment-interface.html">
+
+<dom-module id="keis-app">
+    <template>
+        <style>
+            app-toolbar {
+                background-color: #4285f4;
+                color: #fff;
+            }
+
+            app-drawer {
+                overflow: visible;
+                --app-drawer-scrim-background: rgba(0, 0, 100, 0.8);
+                --app-drawer-content-container: {
+                    background-color: #B0BEC5;
+                }
+            }
+        </style>
+        <app-header reveals>
+            <app-toolbar>
+                <paper-icon-button icon="menu" on-click="toggle"></paper-icon-button>
+                <div main-title>KEIS</div>
+                <paper-icon-button icon="delete"></paper-icon-button>
+                <paper-icon-button icon="search"></paper-icon-button>
+                <paper-icon-button icon="close"></paper-icon-button>
+            </app-toolbar>
+        </app-header>
+        <app-drawer id="drawer" swipe-open>
+            <div style="height: 100%; overflow: auto;"></div>
+        </app-drawer>
+
+        <div>
+            <equipment-interface url="{{url}}"></equipment-interface>
+        </div>
+
+    </template>
+
+    <script>
+        class KeisApp extends Polymer.Element {
+            static get is() {return 'keis-app';}
+
+            static get properties () {
+                return {
+                    url: String
+                };
+            }
+
+            toggle() {
+                Polymer.dom(this.root).querySelector("#drawer").toggle();
+            }
+        }
+
+        window.customElements.define(KeisApp.is, KeisApp);
+    </script>
+</dom-module>

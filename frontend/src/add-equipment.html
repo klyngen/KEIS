@@ -17,7 +17,7 @@
 
 <dom-module id="add-equipment">
     <template>
-        <style include="granite-bootstrap">
+        <style>
           #submitBTN {
             width: 100%;
           }
@@ -27,7 +27,7 @@
         </style>
 
             <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-              <a ref="#" on-click="open"><h5>{{title}}<iron-icon id="expandIcon" icon="icons:expand-more"></iron-icon></h5></a>
+              <h5 on-click="open">{{title}}<iron-icon id="expandIcon" icon="icons:expand-more"></iron-icon></h5>
               <iron-collapse id="collapse">
                   <div>
 

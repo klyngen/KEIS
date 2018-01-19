@@ -3,12 +3,11 @@
 <link href="../bower_components/iron-icon/iron-icon.html" rel="import"/>
 <link href="../bower_components/iron-icons/iron-icons.html" rel="import"/>
 <link href="../bower_components/iron-collapse/iron-collapse.html" rel="import"/>
-<link rel="import" href="../bower_components/polymer/polymer-element.html">æ
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 
-<dom-module id ="delete-instance">
+<dom-module id ="delete-equipment">
     <template>
 
         <style include="granite-bootstrap">
@@ -23,19 +22,14 @@
         <iron-collapse id="collapse">
             <div>
                 <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-
-                <paper-input value="{{rfid}}" label="RFID"></paper-input>
                 <paper-button raised class="red" on-click="submit">delete</paper-button>
             </div>
         </iron-collapse>
 
         <iron-ajax id="ironEQ"
-                   url="{{url}}{{path}}"
-                   method="{{method}}"
+                   url="{{url}}equipment/{{id}}"
+                   method="delete"
                    loading="{{loading}}"
-                   body='{
-                   "RFID": "{{rfid}}"
-                    }'
                    handle-as="json"
                    on-response="handleResponse"
                    on-error="handleErrorResponse"
@@ -48,8 +42,8 @@
 
     <script>
 
-        class DeleteInstance extends Polymer.Element {
-            static get is() {return 'delete-instance';}
+        class DeleteEquipment extends Polymer.Element {
+            static get is() {return 'delete-equipment';}
 
             static get properties() {
                 return {
@@ -57,10 +51,7 @@
                     rfid: String,
                     alertStatus: String,
                     alertText: String,
-                    method: {
-                        type: String,
-                        value: "delete",
-                    },
+                    id: String,
                     path: String,
                 }
             }
@@ -98,6 +89,6 @@
 
 
 
-            window.customElements.define(DeleteInstance.is, DeleteInstance);
+            window.customElements.define(DeleteEquipment.is, DeleteEquipment);
     </script>
 </dom-module>
