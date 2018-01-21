@@ -1,0 +1,29 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="equipment-interface.html">
+<dom-module id="equipment-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+                padding: 10px 20px;
+            }
+        </style>
+
+        <equipment-interface url="{{url}}"></equipment-interface>
+    </template>
+
+    <script>
+        class EquipmentView extends Polymer.Element {
+            static get is() { return 'equipment-view'; }
+            static get properties() {
+                return {
+                    url: String,
+                    // This shouldn't be neccessary, but the Analyzer isn't picking up
+                    // Polymer.Element#rootPath
+                    rootPath: String,
+                };
+            }
+        }
+        window.customElements.define(EquipmentView.is, EquipmentView);
+    </script>
+</dom-module>

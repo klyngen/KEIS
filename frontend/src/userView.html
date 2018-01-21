@@ -1,0 +1,29 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="user-view">
+    <template>
+        <style>
+            :host {
+                display: block;
+                padding: 10px 20px;
+            }
+        </style>
+
+        <h1>Bruker</h1>
+    </template>
+
+    <script>
+        class UserView extends Polymer.Element {
+            static get is() { return 'user-view'; }
+            static get properties() {
+                return {
+                    // This shouldn't be neccessary, but the Analyzer isn't picking up
+                    // Polymer.Element#rootPath
+                    rootPath: String,
+                    url: String,
+                };
+            }
+        }
+        window.customElements.define(UserView.is, UserView);
+    </script>
+</dom-module>
