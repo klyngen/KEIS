@@ -1,0 +1,57 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/granite-bootstrap/granite-bootstrap.html"/>
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html"/>
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html"/>
+
+<dom-module id ="users-view">
+    <template>
+
+        <style include="granite-bootstrap">
+            .editScreen
+            {
+                position:relative;
+            }
+            .editScreen
+            {
+                position: absolute;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                z-index:1;
+                background: rgba(0, 0, 0, 0.3);
+            }
+        </style>
+
+
+        <!-- HTML TEMPLATE -->
+        <div class="container-fluid">
+            <h1>Tekst Tekst Tekst</h1>
+            <h1>Enda mere tekst</h1>
+        </div>
+
+
+    </template>
+
+
+    <script>
+
+        class UsersView extends Polymer.Element {
+            static get is() {
+                return 'users-view';
+            }
+
+            static get properties() {
+                return {
+                    data: {
+                        type: Object,
+                    },
+                    url: String,
+                    selected: Number,
+                };
+            }
+        }
+
+        window.customElements.define(UsersView.is, UsersView);
+    </script>
+</dom-module>

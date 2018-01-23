@@ -5,10 +5,11 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="add-equipment.html">
-<link rel="import" href="equipment-list.html">
+<link rel="import" href="equipment-search.html">
 <link rel="import" href="add-instance.html">
 <link rel="import" href="delete-instance.html">
 <link rel="import" href="delete-equipment.html">
+
 
 <dom-module id ="equipment-interface">
     <template>
@@ -36,15 +37,21 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-5">
-                    <add-equipment url ="{{url}}"></add-equipment>
-                    <equipment-search selected="{{selected}}" url="{{url}}"></equipment-search>
+                    <div class="card">
+                        <div class="card-body">
+                            <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+                            <add-equipment class="list-group-item list-group-item-action flex-column align-items-start" url ="{{url}}"></add-equipment>
+                            <equipment-search id="search" class="list-group-item list-group-item-action flex-column align-items-start" selected="{{selected}}" url="{{url}}"></equipment-search>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="col-md-7">
                     <div class="card">
                         <div class="card-body">
                             <ul class="list-group">
-
+                                <p>{{selected}}</p>
                                 <add-equipment class="list-group-item list-group-item-action flex-column align-items-start"
                                         title="Update Equipment"
                                         url="{{url}}"
@@ -56,19 +63,27 @@
                                         method="put"
                                 ></add-equipment>
 
-                                <add-instance class="list-group-item list-group-item-action flex-column align-items-start"></add-instance>
+                                <add-instance url="{{url}}" equipment="[[selected]]" class="list-group-item list-group-item-action flex-column align-items-start"></add-instance>
 
                                 <delete-instance class="list-group-item list-group-item-action flex-column align-items-start" url="[[url]]"></delete-instance>
 
-                                <delete-equipment class="list-group-item list-group-item-action flex-column align-items-start" id="{{selected}}" url="{{url}}"></delete-equipment>
+                                <delete-equipment if="[[selected]]" class="list-group-item list-group-item-action flex-column align-items-start" id="{{selected}}" url="{{url}}"></delete-equipment>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
+        <iron-ajax id="ironEquipment"
+                    url="{{url}}equipment/{{selected}}"
+                    method="get"
+                    handle-as="json"
+                    on-response="handleResponse"
+                    on-error="handleErrorResponse"
+                    content-type="application/json"
+                    cross-domain = "true"
+                    debounce-duration="300">
+        </iron-ajax>
     </template>
 
 
@@ -85,8 +100,43 @@
                         type: Object,
                     },
                     url: String,
-                    selected: Number,
+                    selected: {
+                        type: String,
+                        value: "1",
+                    },
+                    alertText: String,
+                    alertStatus: String,
                 };
+            }
+
+            static get observers() {
+                return [
+                    '_select()',
+                ]
+            }
+
+            handleResponse(response) {
+                console.log(response.detail.response);
+                //Polymer.dom(this.root).querySelector("#notify").addNotification();
+                this.data = response.detail.response;
+                this.alertText = response.detail.response.success;
+                this.alertStatus = "success";
+
+            }
+
+            handleErrorResponse(response) {
+                Polymer.dom(this.root).querySelector("#notify").addNotification();
+                this.alertText = response.detail.request.xhr.response.error;
+                this.alertStatus = "danger";
+            }
+
+            _select() {
+                console.log("observed");
+                Polymer.dom(this.root).querySelector("#ironEquipment").generateRequest();
+            }
+
+            _extractSelection() {
+                this.selected = Polymer.dom(this.root).querySelector("#search").selected();
             }
         }
 

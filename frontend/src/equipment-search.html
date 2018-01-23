@@ -2,7 +2,7 @@
 <link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
 <link rel="import" href="./equipment-list.html">
 <link rel="import" href="./klingen-notify.html">
-
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 
 
@@ -13,8 +13,10 @@
     <style include="granite-bootstrap">
 
     </style>
-    <p>{{selected}}</p>
+    <p>valgt {{selected}}</p>
     <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+
+    <paper-input label="Equipment Search"></paper-input>
 
     <equipment-list selected="{{selected}}" url="{{url}}" listitems="{{listitems}}"></equipment-list>
 
@@ -39,24 +41,22 @@
 
       static get properties() {
         return {
-          listitems: {
-            type: Array,
-          },
-          alertStatus: String,
-          alertText: String,
-          url: String,
-            selected: Number
+            listitems: {
+              type: Array,
+            },
+            alertStatus: String,
+            alertText: String,
+            url: String,
+            selected: String,
         };
       }
 
       ready() {
         super.ready();
-        console.log(this.url);
         Polymer.dom(this.root).querySelector("#ironEquipment").generateRequest();
       }
 
       handleResponse(response) {
-        console.log(response.detail.response);
         this.listitems = response.detail.response;
       }
 
@@ -65,6 +65,9 @@
         this.alertStatus = "error";
       }
 
+      selected() {
+          return this.selected;
+      }
     };
     window.customElements.define(EquipmentSearch.is, EquipmentSearch);
   </script>

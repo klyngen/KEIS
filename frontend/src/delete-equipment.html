@@ -18,7 +18,7 @@
                 font-weight: bold;
             }
         </style>
-        <h5 on-click="toggle" class="card-title">Delete Instance <iron-icon id="icon" icon="icons:expand-more"></iron-icon></h5>
+        <h5 on-click="toggle" class="card-title">Delete Equipment <iron-icon id="icon" icon="icons:expand-more"></iron-icon></h5>
         <iron-collapse id="collapse">
             <div>
                 <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
@@ -48,7 +48,6 @@
             static get properties() {
                 return {
                     url: String,
-                    rfid: String,
                     alertStatus: String,
                     alertText: String,
                     id: String,
@@ -63,6 +62,7 @@
             }
 
             handleErrorResponse(response) {
+                console.log(response.error);
                 Polymer.dom(this.root).querySelector("#notify").addNotification();
                 this.alertText = response.detail.request.xhr.response.error;
                 console.log(response.detail.request.xhr.response);
