@@ -1,0 +1,75 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu-light.html">
+
+
+<dom-module id="brand-selector">
+    <template>
+        <style>
+            paper-dropdown-menu-light {
+                width: 100%;
+            }
+        </style>
+
+        <paper-dropdown-menu-light label="Select existing brand" value="{{value}}" noink no-animations>
+            <paper-listbox slot="dropdown-content">
+                <template id="brandRepeater" is="dom-repeat" items="{{brands}}">
+                    <paper-item>{{item.name}}</paper-item>
+                </template>
+            </paper-listbox>
+        </paper-dropdown-menu-light>
+
+        <iron-ajax id="ironBrand"
+                   url="{{url}}brand"
+                   method="get"
+                   handle-as="json"
+                   on-response="handleBrands"
+                   on-error="handleErrorResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   debounce-duration="300">
+        </iron-ajax>
+    </template>
+
+
+    <script>
+
+
+        class BrandSelector extends Polymer.Element {
+            static get is () {return 'brand-selector'}
+
+            static get properties () {
+                return {
+                    value: {
+                        type: String,
+                        notify: true
+                    },
+                    brands: Array,
+                    url: String,
+                };
+            }
+
+            // Puts the brands into the brand property
+            ready() {
+                super.ready();
+                this.$.ironBrand.generateRequest();
+            }
+
+            handleBrands(response) {
+                this.brands = response.detail.response;
+            }
+
+            refresh() {
+                super.refresh();
+                this.$.ironBrand.generateRequest();
+            }
+
+            _selected() {
+                this.brand = this.brand;
+                console.log("i smell smoke");
+            }
+        }
+        window.customElements.define(BrandSelector.is, BrandSelector);
+    </script>
+</dom-module>
+

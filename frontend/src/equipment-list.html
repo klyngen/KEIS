@@ -58,8 +58,12 @@
                         type: Array,
                     },
                     url: String,
-                    selected: String,
-                    selectedElem: Object
+                    selected: {
+                        type: String,
+                        notify: true,
+                    },
+                    selectedElem: Object,
+                    tempList: Array
              };
             }
 
@@ -73,6 +77,32 @@
                 e.target.toggle();
                 console.log(this.selected);
 
+            }
+
+            // Hide elements that do not have any hits
+            // Sort the final list
+            search(name, type, brand) {
+                this.tempList = this.listitems;
+
+                // Remove the non-relevant entries
+                var score = 0;
+                for (var i = 0; i < this.listitems.length(); i++) {
+                    score = this.listitems[i].search(name, type, brand);
+                    if (score === 0) {
+                        this.listitems.splice(i, 1);
+                    }
+                }
+
+                // Sort the remaining list
+                this.listitems.sort(function(a, b){return a.search(name, type, brand) - b.search(name, type, brand)});
+            }
+
+            // Set the tempList as the itemlist if no undefined
+            revertList() {
+                if (this.tempList !== undefined) {
+                    this.listitems = this.tempList;
+                }
+                // If it is undefined, do not do shit
             }
         };
         window.customElements.define(EquipmentList.is, EquipmentList);

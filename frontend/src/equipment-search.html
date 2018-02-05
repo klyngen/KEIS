@@ -4,7 +4,7 @@
 <link rel="import" href="./klingen-notify.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-
+<link rel="import" href="./brand-selector.html">
 
 <dom-module id ="equipment-search">
 
@@ -17,7 +17,7 @@
     <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
 
     <paper-input label="Equipment Search"></paper-input>
-
+    <brand-selector url="[[url]]" value="{{brand}}"></brand-selector>
     <equipment-list selected="{{selected}}" url="{{url}}" listitems="{{listitems}}"></equipment-list>
 
     <iron-ajax id="ironEquipment"
@@ -47,7 +47,11 @@
             alertStatus: String,
             alertText: String,
             url: String,
-            selected: String,
+            selected: {
+                type: String,
+                notify: true,
+            },
+            brand: String
         };
       }
 
@@ -68,6 +72,12 @@
       selected() {
           return this.selected;
       }
+
+
+      update() {
+          Polymer.dom(this.root).querySelector("#ironEquipment").generateRequest();
+      }
+
     };
     window.customElements.define(EquipmentSearch.is, EquipmentSearch);
   </script>

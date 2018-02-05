@@ -13,6 +13,9 @@
 <link href="../bower_components/iron-collapse/iron-collapse.html" rel="import"/>
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="klingen-notify.html">
+<link rel="import" href="brand-selector.html">
+<link rel="import" href="type-selector.html">
+
 
 
 <dom-module id="add-equipment">
@@ -39,13 +42,7 @@
                           </div>
 
                           <div class="col-sm-6 col-md-6 col-sx-6">
-                              <paper-dropdown-menu-light label="Select existing brand" value="{{brand}}" on-paper-dropdown-close="validate" noink no-animations>
-                                  <paper-listbox slot="dropdown-content">
-                                      <template id="brandRepeater" is="dom-repeat" items="{{brands}}">
-                                          <paper-item>{{item.name}}</paper-item>
-                                      </template>
-                                  </paper-listbox>
-                              </paper-dropdown-menu-light>
+                              <brand-selector id="brandSelector" value="{{brand}}" url="[[url]]"></brand-selector>
                           </div>
                       </div>
 
@@ -55,15 +52,7 @@
                           </div>
 
                           <div class="col-sm-6 col-md-6 col-sx-6">
-                              <paper-dropdown-menu-light label="Select existing type" on-paper-dropdown-close="validate" value="{{type}}" noink no-animations>
-
-                                  <paper-listbox slot="dropdown-content">
-                                      <template id="brandRepeater" is="dom-repeat" items="{{types}}">
-                                          <paper-item>{{item.name}}</paper-item>
-                                      </template>
-                                  </paper-listbox>
-
-                              </paper-dropdown-menu-light>
+                              <type-selector id="typeSelector" url="[[url]]" value="{{type}}"></type-selector>
                           </div>
                       </div>
 
@@ -95,28 +84,7 @@
             debounce-duration="300">
         </iron-ajax>
 
-        <iron-ajax id="ironBrand"
-            url="{{url}}brand"
-            method="get"
-            handle-as="json"
-            on-response="handleBrands"
-            on-error="handleErrorResponse"
-            content-type="application/json"
-            cross-domain = "true"
-            debounce-duration="300">
-        </iron-ajax>
 
-        <iron-ajax id="ironType"
-            url="{{url}}type"
-            method="get"
-            handle-as="json"
-            on-response="handleTypes"
-            on-error="handleErrorResponse"
-            content-type="application/json"
-            cross-domain = "true"
-            debounce-duration="300">
-        </iron-ajax>
-	
     </template>
 
 
@@ -135,22 +103,18 @@
                  type:{
                    type: String,
                    observer: '_selected',
+                     notify: true
                  },
                  brand: {
                    type: String,
                    observer: '_selected',
+                     notify: true
                  },
 
                  description: String,
                  url: String,
                  alertStatus: String,
                  alertText: String,
-                 brands: {
-                   type: Array,
-                 },
-                 types: {
-                   type: Array,
-                 },
                  dropdowns: Boolean,
                     path: String,
                     method: {
@@ -166,15 +130,14 @@
 
          ready() {
            super.ready();
-           Polymer.dom(this.root).querySelector('#ironBrand').generateRequest();
-           Polymer.dom(this.root).querySelector('#ironType').generateRequest();
         }
 
          save() {
              var iron = Polymer.dom(this.root).querySelector("#ironEQ");
              iron.generateRequest();
-             Polymer.dom(this.root).querySelector('#ironBrand').generateRequest();
-             Polymer.dom(this.root).querySelector('#ironType').generateRequest();
+
+             this.$.brandSelector.refresh();
+             this.$.typeSelector.refresh();
 
              if(this.method !== "put")
                  this.clearFields();
@@ -184,7 +147,6 @@
            Polymer.dom(this.root).querySelector("#notify").addNotification();
            this.alertText = response.detail.response.success;
            this.alertStatus = "success";
-
          }
 
          handleErrorResponse(response) {
@@ -194,19 +156,12 @@
          }
 
          clearFields() {
-             this.model = '';
-             this.type = '';
-             this.brand = '';
-             this.description = '';
+             this.model = null;
+             this.type = null;
+             this.brand = null;
+             this.description = null;
          }
 
-         handleBrands(response) {
-           this.brands = response.detail.response;
-         }
-
-         handleTypes(response) {
-           this.types = response.detail.response;
-         }
 
          validate() {
            if ((this.model != undefined && this.dropdowns)) {
