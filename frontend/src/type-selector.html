@@ -1,0 +1,67 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu-light.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="type-selector">
+    <template>
+        <style>
+            paper-dropdown-menu-light {
+                width: 100%;
+            }
+        </style>
+
+        <paper-dropdown-menu-light label="Select existing type" value="{{value}}" noink no-animations>
+
+            <paper-listbox slot="dropdown-content">
+                <template id="brandRepeater" is="dom-repeat" items="{{types}}">
+                    <paper-item>{{item.name}}</paper-item>
+                </template>
+            </paper-listbox>
+
+        </paper-dropdown-menu-light>
+
+
+        <iron-ajax id="ironType"
+                   url="{{url}}type"
+                   method="get"
+                   handle-as="json"
+                   on-response="handleTypes"
+                   on-error="handleErrorResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   debounce-duration="300">
+        </iron-ajax>
+    </template>
+
+    <script>
+        class TypeSelector extends Polymer.Element {
+            static get is () {return 'type-selector';}
+
+            static get properties() {
+                return {
+                    url: String,
+                    value: {
+                        type: String,
+                        notify: true
+                    },
+                    types: Array
+                };
+            }
+
+            ready() {
+                super.ready();
+                this.$.ironType.generateRequest();
+            }
+
+            refresh() {
+                super.refresh();
+                this.$.ironType.generateRequest();
+            }
+
+            handleTypes(response) {
+                this.types = response.detail.response;
+            }
+        }
+        window.customElements.define(TypeSelector.is, TypeSelector);
+    </script>
+</dom-module>

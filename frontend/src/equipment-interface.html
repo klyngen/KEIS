@@ -40,7 +40,7 @@
                     <div class="card">
                         <div class="card-body">
                             <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-                            <add-equipment class="list-group-item list-group-item-action flex-column align-items-start" url ="{{url}}"></add-equipment>
+                            <add-equipment id="addEquipment" class="list-group-item list-group-item-action flex-column align-items-start" url ="{{url}}"></add-equipment>
                             <equipment-search id="search" class="list-group-item list-group-item-action flex-column align-items-start" selected="{{selected}}" url="{{url}}"></equipment-search>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                         <div class="card-body">
                             <ul class="list-group">
                                 <p>{{selected}}</p>
-                                <add-equipment class="list-group-item list-group-item-action flex-column align-items-start"
+                                <add-equipment id="updateEquipment" class="list-group-item list-group-item-action flex-column align-items-start"
                                         title="Update Equipment"
                                         url="{{url}}"
                                         description="{{data.Description}}"
@@ -63,7 +63,7 @@
                                         method="put"
                                 ></add-equipment>
 
-                                <add-instance url="{{url}}" equipment="[[selected]]" class="list-group-item list-group-item-action flex-column align-items-start"></add-instance>
+                                <add-instance id="addInstance" url="{{url}}" equipment="[[selected]]" class="list-group-item list-group-item-action flex-column align-items-start"></add-instance>
 
                                 <delete-instance class="list-group-item list-group-item-action flex-column align-items-start" url="[[url]]"></delete-instance>
 
@@ -103,16 +103,21 @@
                     selected: {
                         type: String,
                         value: "1",
+                        observer: '_select',
                     },
                     alertText: String,
                     alertStatus: String,
                 };
             }
 
-            static get observers() {
-                return [
-                    '_select()',
-                ]
+            ready() {
+                super.ready();
+
+                var instanceSubmit = Polymer.dom(this.root).querySelector("#addInstance");
+                var addEquipment = this.$.addEquipment;
+
+                instanceSubmit.addEventListener("click", this._searchReload.bind(this));
+                addEquipment.addEventListener("click", this._searchReload.bind(this));
             }
 
             handleResponse(response) {
@@ -131,12 +136,16 @@
             }
 
             _select() {
-                console.log("observed");
+                console.log("running update");
                 Polymer.dom(this.root).querySelector("#ironEquipment").generateRequest();
             }
 
             _extractSelection() {
                 this.selected = Polymer.dom(this.root).querySelector("#search").selected();
+            }
+
+            _searchReload() {
+                this.$.search.update();
             }
         }
 

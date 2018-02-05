@@ -56,6 +56,29 @@
                  this.selected = true;
              }
          }
+
+         // Returns 0, 1, 2, 3 depending the match. This can
+         // Be used for sorting as well as using several parameters to get
+         // A item
+         search(name, brand, type) {
+            var match = 0;
+
+            name = name.toUpperCase();
+
+            name = name || "";
+            brand = brand || "";
+            type = type || "";
+
+            if (brand === this.data.brands)
+                match += 1;
+
+            if (type === this.data.types)
+                match += 1;
+
+             match += this.data.model.search(name);
+
+            return match;
+         }
      };
      window.customElements.define(EquipmentItem.is, EquipmentItem);
     </script>
