@@ -20,12 +20,13 @@
         <paper-input value="{{number}}" label="student number"><iron-icon id="icon" slot="suffix" icon="icons:check"></iron-icon></paper-input>
         <iron-collapse id="collapse">
             <div>
-                <p>{{user.name}}</p>
-                <p>{{user.email}}</p>
+                <p><b>{{user.name}}</b></p>
+                <a href="{{user.email}}">{{user.email}}</a>
             </div>
         </iron-collapse>
 
         <iron-ajax
+                id="iron"
                 auto
                 url="{{url}}user/search/{{number}}"
                 handle-as="json"
@@ -45,18 +46,33 @@
             static get properties() {
                 return {
                     url: String,
-                    number: String,
+                    number: {
+                        type: String,
+                        notify: true
+                    },
                     user: Object,
+                    found: {
+                        type: Boolean,
+                        value: false,
+                        notify: true
+                    }
                 };
             }
+
+            update() {
+                this.$.iron.generateRequest();
+            }
+
             handleResponse(response) {
                 if (response.detail.response.length === 1 && this.number === response.detail.response[0].studentNumber) {
                     this.user = response.detail.response[0];
                     Polymer.dom(this.root).querySelector("#collapse").show();
                     Polymer.dom(this.root).querySelector("#icon").style.display = "block";
+                    this.found = true;
                 } else {
                     Polymer.dom(this.root).querySelector("#collapse").hide();
                     Polymer.dom(this.root).querySelector("#icon").style.display = "none";
+                    this.found = false;
                 }
             }
         }

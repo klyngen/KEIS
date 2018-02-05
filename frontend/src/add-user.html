@@ -5,7 +5,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link href="../bower_components/iron-collapse/iron-collapse.html" rel="import"/>
-
+<link rel="import" href="user-search.html">
 <dom-module id ="add-user">
     <template>
 
@@ -14,13 +14,34 @@
                 width: 100%;
             }
         </style>
+
+        <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+        <user-search id="search" number="{{number}}" found="{{found}}" url="{{url}}"></user-search>
+
         <iron-collapse id="collapse">
             <div>
-                <paper-input label="Full name"></paper-input>
-                <paper-input label="Email"></paper-input>
-                <paper-button disabled on-click="submit" raised>Submit</paper-button>
+                <paper-input value="{{name}}" label="Full name"></paper-input>
+                <paper-input value="{{email}}" label="Email"></paper-input>
+                <paper-button id="submit" disabled on-click="submit" raised>Submit</paper-button>
             </div>
         </iron-collapse>
+
+
+        <iron-ajax id="ironUser"
+                   url="{{url}}user"
+                   method="post"
+                   body='{
+                        "studentNumber": {{number}},
+                        "name": "{{name}}",
+                        "email": "{{email}}"
+                   }'
+                   handle-as="json"
+                   on-response="handleResponse"
+                   on-error="handleErrorResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   debounce-duration="300">
+        </iron-ajax>
 
     </template>
 
@@ -38,9 +59,69 @@
                         type: Object,
                     },
                     url: String,
-                    number: String,
+                    found: {
+                      type: Boolean,
+                      observer: '_change'
+                    },
+                    number: {
+                        type: String,
+                    },
+                    name: {
+                        type: String,
+                        observer: '_validate',
+                        value: ""
+                    },
+                    email: {
+                        type: String,
+                        observer: '_validate',
+                        value: ""
+                    },
+                    alertText: String,
+                    alertStatus: String,
                 };
             }
+
+            _change() {
+                if (!this.found && !this.$.collapse.opened) {
+                    this.$.collapse.toggle();
+                } else {
+                    if (this.found && this.$.collapse.opened) {
+                        this.$.collapse.toggle();
+                    }
+                }
+            }
+
+            _validate() {
+                if (this.name.length !== 0 && this.email.length !== 0) {
+                    this.$.submit.disabled = false;
+                } else {
+                    this.$.submit.disabled = true;
+                }
+            }
+
+
+            handleResponse(response) {
+                Polymer.dom(this.root).querySelector("#notify").addNotification();
+                this.alertText = response.detail.response.success;
+                this.alertStatus = "success";
+                this.found = true;
+                this.$.search.update();
+                this.name = "";
+                this.email = "";
+
+
+            }
+
+            handleErrorResponse(response) {
+                Polymer.dom(this.root).querySelector("#notify").addNotification();
+                this.alertText = response.detail.request.xhr.response.error;
+                this.alertStatus = "danger";
+            }
+
+            submit() {
+                this.$.ironUser.generateRequest();
+            }
+
         }
         window.customElements.define(AddUser.is, AddUser);
     </script>

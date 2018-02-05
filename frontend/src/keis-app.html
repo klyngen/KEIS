@@ -71,7 +71,7 @@
                                     <iron-icon icon="icons:list" slot="item-icon"></iron-icon> <span>Equipment</span>
                             </paper-icon-item>
                             <paper-icon-item name="user">
-                                    <iron-icon icon="icons:account-circle" slot="item-icon"></iron-icon> <span>User</span>
+                                    <iron-icon icon="icons:account-circle" slot="item-icon"></iron-icon> <span>Users</span>
                             </paper-icon-item>
                         </iron-selector>
                     </div>
@@ -106,7 +106,7 @@
                     page: {
                         type: String,
                         observer: '_pageChanged',
-                        value: 'equipment', // Default page
+                        value: 'user', // Default page
                     },
                     routeData: Object,
                     subroute: String,
@@ -128,3 +128,5 @@
         window.customElements.define(KeisApp.is, KeisApp);
     </script>
 </dom-module>
+
+

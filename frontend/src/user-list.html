@@ -1,0 +1,46 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="user-list">
+
+    <template>
+        <style>
+
+        </style>
+
+        <template id="list" is="dom-repeat" items="users">
+            <p>A user</p>r</p>
+        </template>
+
+
+        <iron-ajax id="ironUsers"
+                   url="{{url}}user"
+                   method="get"
+                   handle-as="json"
+                   on-response="handleResponse"
+                   on-error="handleErrorResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   debounce-duration="300">
+        </iron-ajax>
+    </template>
+
+
+    <script>
+        class UserList extends Polymer.Element {
+            static get is () {return 'user-list';}
+
+            ready() {
+                super.ready();
+                
+            }
+
+            static get properties() {
+                return {
+                    users: Array,
+
+                };
+            }
+        }
+        window.customElements.define(UserList.is, UserList);
+    </script>
+</dom-module>
