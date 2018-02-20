@@ -75,13 +75,22 @@ class InstanceController extends Controller
     }
 
     public function delete(Request $request) {
-        error_log($request->input("RFID"));
         $instance = Instance::where('RFID', '=', $request->input("RFID"))->first();
         if ($instance == null) {
             return response()->json(["error"=>"could not find the instance"], 404);
         }
         $instance->delete();
         return response()->json(["success"=>"deleted the instance with ID {$instance->id}"], 200);
+    }
+
+    public function rfid(Request $request) {
+        error_log("some data".$request->input("RFID"));
+        error_log($request);
+        $instance = Instance::where('RFID', '=', $request->input("RFID"))->first();
+        if ($instance == null) {
+            return response()->json(["error"=>"could not find the instance"], 404);
+        }
+        return $instance;
     }
 
 }

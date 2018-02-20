@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Rent;
 
 class User extends Authenticatable
 {
@@ -26,4 +27,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $appends = ['rented'];
+
+    public function getRentedAttribute() {
+        $rented = 1;
+        $rented = Instance::join('rents', 'rents.instances', '=', 'instances.id')
+            ->where('rented', '=', 1)->where('users', '=', $this->attributes['id'])->count();
+        return $rented;
+    }
 }

@@ -67,30 +67,29 @@ class EquipmentController extends Controller {
       } catch (Exception $e) {
           return response()->json(["error"=>"could not delete equipment. Remember that there cannot be any instances left"], 500);
       }
-
-
-      return response()->json(Array("success"=>"Item delet"), 204);
+      return response()->json(Array("success"=>"Item deleted"), 204);
     }
 
 
     public function search(Request $response) {
-        $brand = $response->input('brand');
-        $type = $response->input('type');
-
+        $brand = BrandController::solveDependence($response->input('brand'));
+        $type = TypeController::solveDependence($response->input('type'));
         $model = $response->input('model');
-
-        $searchArray = Array();
-
+        //error_log($brand, $type, $model);
+        $parameters = Array();
         if ($brand != null)
-            array_add($searchArray, ['brand'=>$brand]);
+            array_push($parameters, ['brands', '=', $brand]);
 
         if ($type != null)
-            array_add($searchArray, ['type'=>$type]);
+            array_push($parameters, ['types', '=', $type]);
 
-        $result = Instances::join('equipment', 'equipment.id', '=', 'instances.equipment')
-            ->where($searchArray)
-            ->orWhere('model', 'like', '%'.$model.'%')->get();
+        if (count($model) > 0) {
+            array_push($parameters, ['model', 'LIKE', "%$model%"]);
+            //array_push($parameters, ['Description', 'LIKE', "%$model%"]);
+        }
 
-        return response()->json($result, 200);
+
+
+        return response()->json(Equipment::where($parameters)->get(), 200);
     }
 }
