@@ -20,12 +20,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Equipment Related Routes
 Route::get('equipment', 'EquipmentController@index');
 Route::get('equipment/{id}', 'EquipmentController@show');
+Route::post('equipment/search', 'EquipmentController@search');
 Route::post('equipment', 'EquipmentController@store');
 Route::put('equipment/{id}', 'EquipmentController@update');
 Route::delete('equipment/{id}', 'EquipmentController@delete');
 Route::get('equipment/{id}/instance', 'InstanceController@getAllEquipment');
 
 // Instance functionality
+Route::post('instance/rfid', 'InstanceController@rfid');
 Route::post('instance', 'InstanceController@store');
 Route::put('instance/{id}', 'InstanceController@update');
 Route::delete('instance', 'InstanceController@delete');
@@ -49,4 +51,3 @@ Route::get('user/search/{id}', 'UserController@findUserById');
 Route::get('brand', 'BrandController@index');
 Route::get('type', 'TypeController@index');
 
-Route::get('search', 'EquipmentController@search');

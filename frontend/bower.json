@@ -27,7 +27,12 @@
     "iron-label": "PolymerElements/iron-label#^2.0.0",
     "vaadin-date-picker": "vaadin/vaadin-date-picker#^2.0.7",
     "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0",
-    "paper-toolbar": "PolymerElements/paper-toolbar#^2.0.0"
+    "paper-toolbar": "PolymerElements/paper-toolbar#^2.0.0",
+    "paper-datatable-api": "^2.0.12",
+    "paper-dialog": "PolymerElements/paper-dialog#^2.0.1",
+    "paper-dialog-scrollable": "PolymerElements/paper-dialog-scrollable#^2.2.0",
+    "google-chart": "GoogleWebComponents/google-chart/elements/google-chart#^2.0.0",
+    "granite-c3": "LostInBrittany/granite-c3#^2.2.2"
   },
   "resolutions": {
     "polymer": "^2.0.0"
