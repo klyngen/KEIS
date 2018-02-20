@@ -1,6 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/granite-bootstrap/granite-bootstrap.html">
 <link rel="import" href="rent-add.html">
+<link rel="import" href="rent-deliver.html">
+
 <dom-module id="rent-interface">
     <template>
         <style include="granite-bootstrap">
@@ -13,7 +15,7 @@
                 </div>
 
                 <div class="col-md-6">
-
+                    <rent-deliver url="{{url}}"></rent-deliver>
                 </div>
             </div>
         </div>

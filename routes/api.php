@@ -36,7 +36,7 @@ Route::delete('instance', 'InstanceController@delete');
 Route::get('rent', 'RentController@index');
 Route::get('rent/{id}', 'RentController@show');
 Route::post('rent', 'RentController@store');
-Route::put('rent/{id}', 'RentController@deliver');
+Route::post('rent/deliver', 'RentController@deliver');
 Route::get('stats', 'RentController@statistics');
 
 // User functionality

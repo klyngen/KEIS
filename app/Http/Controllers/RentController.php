@@ -49,10 +49,16 @@ class RentController extends Controller
         return response()->json($rent->id, 201);
     }
 
-    public function deliver(Request $request, $id) {
-        $rent = Rent::where('id', $id)->first();
-        $instance = Instance::where('id', '=', 'instances')->first();
-        $instance->rented = 0;
+    public function deliver(Request $request) {
+        try {
+            $rent = Rent::join('instances', 'rents.instances', '=', 'instances.id')
+                ->where('RFID', $request->input("RFID"))
+                ->whereNull("stop")->first();
+            $instance = Instance::where('id', '=', $rent->instances)->first();
+            $instance->rented = 0;
+        } catch (\Exception $e) {
+            return response()->json(["error"=>"something has gone wrong during delivery"], 500);
+        }
 
         $instance->save();
 

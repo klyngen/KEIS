@@ -1,0 +1,79 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/granite-bootstrap/granite-bootstrap.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="klingen-notify.html">
+
+<dom-module id="rent-deliver">
+    <template>
+        <style include="granite-bootstrap">
+
+            paper-button {
+                margin-top: 20px;
+                width: 100%;
+            }
+        </style>
+
+
+        <iron-ajax id="iron"
+                   url="{{url}}rent/deliver"
+                   handle-as="json"
+                   method="post"
+                   body='{"RFID":"{{rfid}}"}'
+                   on-response="handleResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   on-error="handleErrorResponse"
+                   debounce-duration="300">
+        </iron-ajax>
+
+        <div class="card">
+            <div class="card-body">
+                <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+                <h5 class="card-title">Deliver rented item</h5>
+                <paper-input label="RFID" value="{{rfid}}"></paper-input>
+                <paper-button on-click="submit" raised>Submit</paper-button>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        class RentDeliver extends Polymer.Element {
+            static get is() {return 'rent-deliver';}
+
+            static get properties() {
+                return {
+                  url: String,
+                    rfid: String,
+                    alertText: String,
+                    alertStatus: String
+                };
+            }
+            submit() {
+                this.$.iron.generateRequest();
+            }
+
+
+            handleResponse(response) {
+                console.log(response.detail.response);
+                this.alertText = response.detail.response.success;
+                this.alertStatus = "success";
+                Polymer.dom(this.root).querySelector("#notify").addNotification();
+            }
+
+
+            handleErrorResponse(response) {
+                console.log(response.detail.request.xhr.response);
+                this.alertText = response.detail.request.xhr.response.error;
+                this.alertStatus = "danger";
+                Polymer.dom(this.root).querySelector("#notify").addNotification();
+            }
+
+
+        }
+        window.customElements.define(RentDeliver.is, RentDeliver);
+    </script>
+
+</dom-module>
