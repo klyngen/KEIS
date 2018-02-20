@@ -5,10 +5,8 @@
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="add-equipment.html">
+<link rel="import" href="instance-list.html">
 <link rel="import" href="equipment-search.html">
-<link rel="import" href="add-instance.html">
-<link rel="import" href="delete-instance.html">
-<link rel="import" href="delete-equipment.html">
 
 
 <dom-module id ="equipment-interface">
@@ -37,40 +35,22 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-5">
+
                     <div class="card">
-                        <div class="card-body">
+                        <div>
+
                             <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
                             <add-equipment id="addEquipment" class="list-group-item list-group-item-action flex-column align-items-start" url ="{{url}}"></add-equipment>
-                            <equipment-search id="search" class="list-group-item list-group-item-action flex-column align-items-start" selected="{{selected}}" url="{{url}}"></equipment-search>
+                            <equipment-search id="search" selected="{{selected}}" url="{{url}}"></equipment-search>
                         </div>
                     </div>
 
                 </div>
 
                 <div class="col-md-7">
-                    <div class="card">
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <p>{{selected}}</p>
-                                <add-equipment id="updateEquipment" class="list-group-item list-group-item-action flex-column align-items-start"
-                                        title="Update Equipment"
-                                        url="{{url}}"
-                                        description="{{data.Description}}"
-                                        type="{{data.types}}"
-                                        brand="{{data.brands}}"
-                                        model="{{data.model}}"
-                                        path="equipment/[[selected]]"
-                                        method="put"
-                                ></add-equipment>
-
-                                <add-instance id="addInstance" url="{{url}}" equipment="[[selected]]" class="list-group-item list-group-item-action flex-column align-items-start"></add-instance>
-
-                                <delete-instance class="list-group-item list-group-item-action flex-column align-items-start" url="[[url]]"></delete-instance>
-
-                                <delete-equipment if="[[selected]]" class="list-group-item list-group-item-action flex-column align-items-start" id="{{selected}}" url="{{url}}"></delete-equipment>
-                            </ul>
+                        <div>
+                            <instance-list equipment="[[data]]" url="[[url]]" id="[[selected]]"></instance-list>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -110,19 +90,8 @@
                 };
             }
 
-            ready() {
-                super.ready();
-
-                var instanceSubmit = Polymer.dom(this.root).querySelector("#addInstance");
-                var addEquipment = this.$.addEquipment;
-
-                instanceSubmit.addEventListener("click", this._searchReload.bind(this));
-                addEquipment.addEventListener("click", this._searchReload.bind(this));
-            }
 
             handleResponse(response) {
-                console.log(response.detail.response);
-                //Polymer.dom(this.root).querySelector("#notify").addNotification();
                 this.data = response.detail.response;
                 this.alertText = response.detail.response.success;
                 this.alertStatus = "success";
@@ -136,7 +105,6 @@
             }
 
             _select() {
-                console.log("running update");
                 Polymer.dom(this.root).querySelector("#ironEquipment").generateRequest();
             }
 

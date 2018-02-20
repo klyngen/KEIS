@@ -1,0 +1,32 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
+
+<dom-module id="user-item">
+    <template>
+        <style include="granite-bootstrap">
+
+        </style>
+
+        <div class="list-group-item list-group-item-action flex-column align-items-start">
+            <h5>{{data.name}} - {{data.studentNumber}}</h5>
+            <a href="mailto:{{data.email}}">{{data.email}}</a>
+            <br>
+            <span class="badge badge-danger">Rented [[data.rented]]</span>
+        </div>
+
+    </template>
+
+    <script>
+        class UserItem extends Polymer.Element {
+            static get is() {return 'user-item';}
+
+            static get properties() {
+                return {
+                  data: Object
+                };
+            }
+        }
+
+        window.customElements.define(UserItem.is, UserItem);
+    </script>
+</dom-module>

@@ -16,15 +16,22 @@
         </style>
 
         <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-        <user-search id="search" number="{{number}}" found="{{found}}" url="{{url}}"></user-search>
+         <user-search id="search" number="{{number}}" found="{{found}}" url="{{url}}"></user-search>
+                <iron-collapse id="collapse">
 
-        <iron-collapse id="collapse">
-            <div>
-                <paper-input value="{{name}}" label="Full name"></paper-input>
-                <paper-input value="{{email}}" label="Email"></paper-input>
-                <paper-button id="submit" disabled on-click="submit" raised>Submit</paper-button>
-            </div>
-        </iron-collapse>
+                    <div class="card">
+                        <div class="card-body">
+                    <div>
+                        <paper-input value="{{name}}" label="Full name"></paper-input>
+                        <paper-input value="{{email}}" label="Email"></paper-input>
+                        <paper-button id="submit" disabled on-click="submit" raised>Submit</paper-button>
+                    </div>
+                        </div>
+                    </div>
+                </iron-collapse>
+
+
+
 
 
         <iron-ajax id="ironUser"
@@ -61,10 +68,12 @@
                     url: String,
                     found: {
                       type: Boolean,
-                      observer: '_change'
+                      observer: '_change',
+                        notify: true
                     },
                     number: {
-                        type: String,
+                        type: Number,
+                        notify: true
                     },
                     name: {
                         type: String,
@@ -120,6 +129,7 @@
 
             submit() {
                 this.$.ironUser.generateRequest();
+                this.listen = true;
             }
 
         }

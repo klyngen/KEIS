@@ -26,7 +26,6 @@
                    method="get"
                    handle-as="json"
                    on-response="handleTypes"
-                   on-error="handleErrorResponse"
                    content-type="application/json"
                    cross-domain = "true"
                    debounce-duration="300">
@@ -61,6 +60,7 @@
             handleTypes(response) {
                 this.types = response.detail.response;
             }
+
         }
         window.customElements.define(TypeSelector.is, TypeSelector);
     </script>

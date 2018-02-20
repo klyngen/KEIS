@@ -21,7 +21,16 @@
             }
         </style>
         <div class="container-fluid">
-            <add-user url="{{url}}"></add-user>
+            <div class="row">
+                <div class="col-md-6">
+                    <add-user listen="{{listen}}" url="{{url}}"></add-user>
+                </div>
+
+                <div class="col-md-6">
+                    <user-list id="userList" url="{{url}}"></user-list>
+                </div>
+            </div>
+
         </div>
 
 
@@ -40,6 +49,10 @@
                     url: String,
                     number: String,
                     user: Object,
+                    listen: {
+                        observer: '_userAdd',
+                        type: Boolean
+                    }
                 };
             }
             handleResponse(response) {
@@ -51,6 +64,10 @@
                     Polymer.dom(this.root).querySelector("#collapse").hide();
                     Polymer.dom(this.root).querySelector("#icon").style.display = "none";
                 }
+            }
+
+            _userAdd() {
+                this.$.userList.update();
             }
         }
         window.customElements.define(UserView.is, UserView);

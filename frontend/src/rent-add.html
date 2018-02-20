@@ -1,0 +1,94 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/granite-bootstrap/granite-bootstrap.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="add-user.html">
+<link rel="import" href="instance-search.html">
+
+<dom-module id="add-rent">
+    <template>
+        <style include="granite-bootstrap">
+            paper-button {
+                width: 100%;
+            }
+        </style>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Add rent
+                </h5>
+                <p>To add rent, it you have to search for a user. And scan a pice of equipment.
+                    Proceed to click submit when the following terms are met</p>
+                <paper-button on-click="submit" id="submit" disabled raised>Submit</paper-button>
+            </div>
+        </div>
+        <add-user number="{{userId}}" found="{{foundUser}}" url="{{url}}"></add-user>
+        <instance-search rfid="{{rfid}}" id="{{foundInstance}}"  url="{{url}}"></instance-search>
+
+
+        <iron-ajax id="ironRent"
+                   url="{{url}}rent"
+                   method="post"
+                   body='{
+    "instance": {{foundInstance}},
+    "studentNumber": {{userId}}
+}'
+                   handle-as="json"
+                   on-response="handleResponse"
+                   on-error="handleErrorResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   debounce-duration="300">
+        </iron-ajax>
+    </template>
+
+    <script>
+        class AddRent extends Polymer.Element {
+            static get is() {return 'add-rent';}
+
+            static get properties() {
+                return {
+                    url: String,
+                    foundUser:{
+                        type: Boolean,
+                        observer: '_validate'
+                    },
+                    userId: Number,
+                    foundInstance: {
+                        type: Number,
+                        observer: '_validate'
+                    },
+                    rfid: String
+                };
+            }
+
+            _validate() {
+                if (this.foundUser && this.foundInstance != null) {
+                    this.$.submit.disabled = false;
+                } else {
+                    this.$.submit.disabled = true;
+                }
+            }
+
+            handleResponse(response) {
+                console.log(response);
+                this.userId = null;
+                this.foundInstance = null;
+                this.rfid = null;
+            }
+
+            handleErrorResponse(response) {
+                console.log(response);
+            }
+
+            submit() {
+                this.$.ironRent.generateRequest();
+            }
+        }
+        window.customElements.define(AddRent.is, AddRent);
+    </script>
+
+</dom-module>

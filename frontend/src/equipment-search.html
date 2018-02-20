@@ -2,10 +2,14 @@
 <link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
 <link rel="import" href="./equipment-list.html">
 <link rel="import" href="./klingen-notify.html">
+<link href="../bower_components/iron-icon/iron-icon.html" rel="import"/>
+<link href="../bower_components/iron-icons/iron-icons.html" rel="import"/>
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="./brand-selector.html">
-
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="brand-selector.html">
+<link rel="import" href="type-selector.html">
 <dom-module id ="equipment-search">
 
   <template>
@@ -13,22 +17,36 @@
     <style include="granite-bootstrap">
 
     </style>
-    <p>valgt {{selected}}</p>
     <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
 
-    <paper-input label="Equipment Search"></paper-input>
-    <brand-selector url="[[url]]" value="{{brand}}"></brand-selector>
+    <div class="card">
+      <div class="card-body">
+        <h5 on-click="toggle" class="card-title">
+          Search for equipment<iron-icon icon="icons:filter-list" slot="item-icon"></iron-icon>
+        </h5>
+        <p>Apply filters to easier select equipment</p>
+        <iron-collapse id="collapse">
+          <paper-input value="{{word}}" label="Model / description"></paper-input>
+          <brand-selector value="{{brand}}" url="{{url}}"></brand-selector>
+          <type-selector value="{{type}}" url="{{url}}"></type-selector>
+        </iron-collapse>
+
+      </div>
+    </div>
+
     <equipment-list selected="{{selected}}" url="{{url}}" listitems="{{listitems}}"></equipment-list>
 
     <iron-ajax id="ironEquipment"
-        url="{{url}}equipment"
-        method="get"
-        handle-as="json"
-        on-response="handleResponse"
-        on-error="handleErrorResponse"
-        content-type="application/json"
-        cross-domain = "true"
-        debounce-duration="300">
+               auto
+               url="{{url}}equipment/search"
+               body='{"model": "{{word}}", "brand": "{{brand}}", "type": "{{type}}"}'
+               handle-as="json"
+               method="POST"
+               on-error="handleErrorResponse"
+               on-response="handleResponse"
+               cross-domain="true"
+               content-type="application/json"
+               debounce-duration="300">
     </iron-ajax>
 
   </template>
@@ -51,7 +69,9 @@
                 type: String,
                 notify: true,
             },
-            brand: String
+            word: String,
+            brand: String,
+            type: String
         };
       }
 
@@ -76,6 +96,10 @@
 
       update() {
           Polymer.dom(this.root).querySelector("#ironEquipment").generateRequest();
+      }
+
+      toggle() {
+          this.$.collapse.toggle();
       }
 
     };

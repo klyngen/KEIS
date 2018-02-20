@@ -11,10 +11,10 @@
             }
         </style>
 
-        <paper-dropdown-menu-light label="Select existing brand" value="{{value}}" noink no-animations>
+        <paper-dropdown-menu-light label="Select existing brand" selected="{{sel}}" value="{{value}}" noink no-animations>
             <paper-listbox slot="dropdown-content">
                 <template id="brandRepeater" is="dom-repeat" items="{{brands}}">
-                    <paper-item>{{item.name}}</paper-item>
+                    <paper-item value="item.id">{{item.name}}</paper-item>
                 </template>
             </paper-listbox>
         </paper-dropdown-menu-light>
@@ -24,7 +24,6 @@
                    method="get"
                    handle-as="json"
                    on-response="handleBrands"
-                   on-error="handleErrorResponse"
                    content-type="application/json"
                    cross-domain = "true"
                    debounce-duration="300">
@@ -42,7 +41,7 @@
                 return {
                     value: {
                         type: String,
-                        notify: true
+                        notify: true,
                     },
                     brands: Array,
                     url: String,
@@ -64,10 +63,6 @@
                 this.$.ironBrand.generateRequest();
             }
 
-            _selected() {
-                this.brand = this.brand;
-                console.log("i smell smoke");
-            }
         }
         window.customElements.define(BrandSelector.is, BrandSelector);
     </script>

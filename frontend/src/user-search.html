@@ -6,8 +6,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link href="../bower_components/iron-collapse/iron-collapse.html" rel="import"/>
-
-
+<link rel="import" href="user-item.html">
 
 <dom-module id ="user-search">
     <template>
@@ -17,11 +16,16 @@
                 display: none;
             }
         </style>
-        <paper-input value="{{number}}" label="student number"><iron-icon id="icon" slot="suffix" icon="icons:check"></iron-icon></paper-input>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Search / add user</h5>
+                <paper-input value="{{number}}" label="student number"><iron-icon id="icon" slot="suffix" icon="icons:check"></iron-icon></paper-input>
+            </div>
+        </div>
         <iron-collapse id="collapse">
             <div>
-                <p><b>{{user.name}}</b></p>
-                <a href="{{user.email}}">{{user.email}}</a>
+                <user-item data="{{user}}"></user-item>
             </div>
         </iron-collapse>
 
@@ -47,8 +51,8 @@
                 return {
                     url: String,
                     number: {
-                        type: String,
-                        notify: true
+                        type: Number,
+                        notify: true,
                     },
                     user: Object,
                     found: {
@@ -69,6 +73,7 @@
                     Polymer.dom(this.root).querySelector("#collapse").show();
                     Polymer.dom(this.root).querySelector("#icon").style.display = "block";
                     this.found = true;
+                    this.number = this.user.studentNumber;
                 } else {
                     Polymer.dom(this.root).querySelector("#collapse").hide();
                     Polymer.dom(this.root).querySelector("#icon").style.display = "none";

@@ -1,0 +1,36 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/granite-bootstrap/granite-bootstrap.html">
+<link rel="import" href="rent-add.html">
+<dom-module id="rent-interface">
+    <template>
+        <style include="granite-bootstrap">
+
+        </style>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <add-rent url="{{url}}"></add-rent>
+                </div>
+
+                <div class="col-md-6">
+
+                </div>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        class RentInterface extends Polymer.Element {
+            static get is () {return 'rent-interface';}
+
+            static get properties() {
+                return {
+                  url: String,
+
+                };
+            }
+        }
+        window.customElements.define(RentInterface.is, RentInterface);
+    </script>
+</dom-module>

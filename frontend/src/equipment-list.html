@@ -39,9 +39,9 @@
 
 
 
-        <div class="list-group">
+        <div>
             <template id="list" is="dom-repeat" items="{{listitems}}">
-                <equipment-item id="[[item.id]]" on-click="select" url="{{url}}" data="{{item}}"></equipment-item>
+                <equipment-item id="[[item.id]]" on-click="select" url2="{{url2}}" data="{{item}}"></equipment-item>
             </template>
         </div>
 
@@ -58,6 +58,7 @@
                         type: Array,
                     },
                     url: String,
+                    url2: String,
                     selected: {
                         type: String,
                         notify: true,
@@ -67,6 +68,11 @@
              };
             }
 
+            ready() {
+                super.ready();
+                this.url2 = this.url;
+
+            }
             select(e) {
                 if (this.selectedElem !== undefined) {
                     this.selectedElem.toggle();
@@ -75,7 +81,6 @@
                 this.selected = e.target.id;
                 this.selectedElem = e.target;
                 e.target.toggle();
-                console.log(this.selected);
 
             }
 

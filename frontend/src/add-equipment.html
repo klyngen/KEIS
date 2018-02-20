@@ -27,12 +27,15 @@
             paper-dropdown-menu-light {
                 width: 100%;
             }
+
+            #add-equipment {
+                padding-bottom: 40px;
+            }
         </style>
 
             <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-              <h5 on-click="open">{{title}}<iron-icon id="expandIcon" icon="icons:expand-more"></iron-icon></h5>
-              <iron-collapse id="collapse">
-                  <div>
+              <h5 on-click="open">{{title}}</h5>
+                  <div id="add-equipment">
 
                       <paper-input label="Model" value="{{model}}" required auto-validate error-message="This field is required" on-input="validate"></paper-input>
                       <paper-textarea label="Description" value="{{description}}"></paper-textarea>
@@ -63,7 +66,6 @@
                       <paper-button  id="submitBTN" disabled raised  on-click="save" > <b>Sumbit</b> </paper-button>
                   </div>
 
-              </iron-collapse>
 
 
         <iron-ajax id="ironEQ"
@@ -128,9 +130,6 @@
              };
          }
 
-         ready() {
-           super.ready();
-        }
 
          save() {
              var iron = Polymer.dom(this.root).querySelector("#ironEQ");
@@ -144,15 +143,15 @@
          }
 
          handleResponse(response) {
-           Polymer.dom(this.root).querySelector("#notify").addNotification();
            this.alertText = response.detail.response.success;
            this.alertStatus = "success";
+           Polymer.dom(this.root).querySelector("#notify").addNotification();
          }
 
          handleErrorResponse(response) {
-             Polymer.dom(this.root).querySelector("#notify").addNotification();
              this.alertText = response.detail.request.xhr.response.error;
              this.alertStatus = "danger";
+             Polymer.dom(this.root).querySelector("#notify").addNotification();
          }
 
          clearFields() {

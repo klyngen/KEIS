@@ -1,0 +1,95 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/granite-bootstrap/granite-bootstrap.html">
+
+<link href="../bower_components/iron-icon/iron-icon.html" rel="import"/>
+<link href="../bower_components/iron-icons/iron-icons.html" rel="import"/>
+<dom-module id="instance-item">
+    <template>
+        <style include="granite-bootstrap">
+            .card {
+                margin-left: 30px;
+            }
+
+            .edit-icon {
+                display: block;
+                border-radius: 60px;
+                background-color: #f44c48;
+                padding: 5px;
+                --iron-icon-fill-color: #fff;
+                --iron-icon-height: 30px;
+                --iron-icon-width: 30px;
+                position: absolute;
+                right: 0px;
+                top: 5px;
+                margin-right: 5px;
+
+            }
+
+            .edit-icon:hover {
+                background-color: #f47970;
+            }
+        </style>
+
+        <div class="card">
+            <div class="card-body">
+
+                <iron-icon on-click="delete" class="edit-icon" icon="icons:delete"></iron-icon>
+                <h5 class="card-title">{{data.RFID}} <template is="dom-if" if="{{data.rented}}">
+                    <span class="badge badge-danger">rented</span>
+                </template></h5>
+                <span class="badge">purchased {{data.purchasetime}}</span>
+                <span class="badge">registered {{data.created_at}}</span>
+                <span class="badge">condition {{data.condition}}</span>
+            </div>
+
+        </div>
+
+
+        <iron-ajax id="ironInstance"
+                   url="{{url}}instance"
+                   method="delete"
+                   loading="{{loading}}"
+                   body='{
+                   "RFID": "{{data.RFID}}"
+                    }'
+                   handle-as="json"
+                   on-response="handleResponse"
+                   on-error="handleErrorResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   debounce-duration="300">
+        </iron-ajax>
+
+    </template>
+
+    <script>
+        class InstanceItem extends Polymer.Element {
+            static get is() {return 'instance-item';}
+
+            ready()  {
+                super.ready();
+            }
+
+            static get properties() {
+                return {
+                    data: Object,
+                    url: String,
+                    rented: Boolean,
+                };
+            }
+
+            delete() {
+                this.$.ironInstance.generateRequest();
+            }
+
+            handleResponse(response) {
+                this.remove();
+            }
+
+            handleErrorResponse(response) {
+            }
+        }
+
+        window.customElements.define(InstanceItem.is, InstanceItem);
+    </script>
+</dom-module>

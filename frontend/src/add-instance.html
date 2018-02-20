@@ -34,22 +34,26 @@
             iron-label span {
                 font-weight: bold;
             }
+
+            #addInstance {
+                margin-bottom: 40px;
+            }
         </style>
-            <h5 on-click="toggle">Add instance<iron-icon id="expandIcon" icon="icons:expand-more"></iron-icon></h5>
-            <iron-collapse id="collapse">
-                <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
-                <iron-label>
-                    <span>Condition</span>
-                    <paper-slider max="10" value="{{condition}}" editable></paper-slider>
-                </iron-label>
-                <vaadin-date-picker label="purchase time" value="{{purchase}}"></vaadin-date-picker>
-                <paper-input value="{{rfid}}" label="RFID" required auto-validate error-message="This field is required"></paper-input>
-                    <paper-button id="submit" on-click="submit" disabled raised>Submit</paper-button>
-            </iron-collapse>
+        <div id="addInstance">
+
+            <h5>Add instance</h5>
+            <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+            <iron-label>
+                <span>Condition</span>
+                <paper-slider max="10" value="{{condition}}" editable></paper-slider>
+            </iron-label>
+            <vaadin-date-picker label="purchase time" value="{{purchase}}"></vaadin-date-picker>
+            <paper-input value="{{rfid}}" label="RFID" required auto-validate error-message="This field is required"></paper-input>
+            <paper-button id="submit" on-click="submit" disabled raised>Submit</paper-button>
+        </div>
         <iron-ajax id="ironEQ"
                    url="{{url}}instance"
                    method="{{method}}"
-                   loading="{{loading}}"
                    body='{
                    "equipment": "{{equipment}}",
                    "RFID": "{{rfid}}",

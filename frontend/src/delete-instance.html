@@ -18,17 +18,17 @@
                 color: white;
                 font-weight: bold;
             }
+            #deleteInstance {
+                margin-bottom: 40px;
+            }
         </style>
-        <h5 on-click="toggle" class="card-title">Delete Instance <iron-icon id="icon" icon="icons:expand-more"></iron-icon></h5>
-        <iron-collapse id="collapse">
-            <div>
-                <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
+        <div id="deleteInstance">
+            <h5 class="card-title">Delete Instance</h5>
+            <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
 
-                <paper-input value="{{rfid}}" label="RFID"></paper-input>
-                <paper-button raised class="red" on-click="submit">delete</paper-button>
-            </div>
-        </iron-collapse>
-
+            <paper-input value="{{rfid}}" label="RFID"></paper-input>
+            <paper-button raised class="red" on-click="submit">delete</paper-button>
+        </div>
         <iron-ajax id="ironEQ"
                    url="{{url}}{{path}}"
                    method="{{method}}"

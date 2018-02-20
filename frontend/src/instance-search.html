@@ -1,0 +1,79 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/granite-bootstrap/granite-bootstrap.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="instance-item.html">
+
+
+<dom-module id="instance-search">
+    <template>
+        <style include="granite-bootstrap">
+
+        </style>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Search for instance</h5>
+                <paper-input value="{{rfid}}" label="Instance RFID"></paper-input>
+            </div>
+        </div>
+
+
+        <iron-ajax
+                id="iron"
+                auto
+                url="{{url}}instance/rfid"
+                body='{
+                   "RFID": "{{rfid}}"
+                    }'
+                handle-as="json"
+                method="post"
+                on-error="handleErrorResponse"
+                on-response="handleResponse"
+                cross-domain="true"
+                content-type="application/json"
+                debounce-duration="300">
+        </iron-ajax>
+
+        <iron-collapse id="collapse">
+            <div>
+                <instance-item url="{{url}}" data="{{data}}" ></instance-item>
+            </div>
+        </iron-collapse>
+
+
+    </template>
+
+    <script>
+        class InstanceSearch extends Polymer.Element {
+            static get is() {return 'instance-search';}
+
+            static get properties() {
+                return {
+                    url: String,
+                    rfid: String,
+                    data: Object,
+                    id:{
+                        type: Number,
+                        notify: true,
+                        value: null
+                    }
+                };
+            }
+            handleResponse(response) {
+                console.log(response.detail.response);
+                this.data = response.detail.response;
+                this.$.collapse.show();
+                this.id = this.data.id;
+            }
+
+            handleErrorResponse(response) {
+                this.$.collapse.hide();
+                this.id = null;
+            }
+        }
+
+        window.customElements.define(InstanceSearch.is, InstanceSearch);
+    </script>
+</dom-module>

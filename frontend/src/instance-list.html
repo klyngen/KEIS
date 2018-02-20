@@ -1,0 +1,55 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="equipment-item.html">
+<link rel="import" href="instance-item.html">
+
+
+<dom-module id="instance-list">
+    <template>
+        <style>
+
+        </style>
+        <equipment-item data="{{equipment}}"></equipment-item>
+        <iron-ajax id="iron" auto
+                   url="{{url}}equipment/{{id}}/instance"
+                   handle-as="json"
+                   on-response="handleResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   on-error="handleErrorResponse"
+                   debounce-duration="300">
+        </iron-ajax>
+        <template id="list" is="dom-repeat" items="{{data}}">
+
+            <instance-item data="{{item}}" url="{{url}}"></instance-item>
+
+        </template>
+    </template>
+
+    <script>
+        class InstanceList extends Polymer.Element {
+            static get is() {return 'instance-list';}
+
+
+
+            static get proerties() {
+                return {
+                    url: String,
+                    data: Array,
+                    id: String,
+                    equipment: Object,
+                };
+            }
+
+            handleResponse(response) {
+                this.data = response.detail.response;
+            }
+
+            handleErrorResponse() {
+                this.data = null;
+            }
+        }
+
+        window.customElements.define(InstanceList.is, InstanceList);
+    </script>
+</dom-module>

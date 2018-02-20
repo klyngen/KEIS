@@ -1,0 +1,70 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
+<link href="../bower_components/granite-c3/granite-c3.html" rel="import"/>
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="rent-stats">
+    <template>
+        <style include="granite-bootstrap">
+            granite-c3 {
+                height: 300px;
+            }
+        </style>
+<iron-ajax id="ironStats"
+                    auto
+                   url="{{url}}stats"
+                   method="get"
+                   handle-as="json"
+                   on-response="handleResponse"
+                   content-type="application/json"
+                   cross-domain = "true"
+                   debounce-duration="300">
+        </iron-ajax>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Rent status</h5>
+                <granite-c3
+                        data="{&quot;columns&quot;: [[&quot;Available&quot;, &quot;{{available}}&quot;], [&quot;Rented&quot;, &quot;{{rented}}&quot;], [&quot;One week <&quot;, &quot;{{long}}&quot;]], &quot;type&quot;: &quot;donut&quot;}"
+                        donut="{&quot;title&quot;: &quot;Rent status&quot;}"></granite-c3>
+            </div>
+        </div>
+
+    </template>
+
+
+    <script>
+        class RentStats extends Polymer.Element {
+            static get is() {return 'rent-stats';}
+            static get properties() {
+                return {
+                  url: String,
+                        available: {
+                            type: Number,
+                            value: 10
+                        },
+                        rented: {
+                            type: Number,
+                            value: 10
+                        },
+                        long: {
+                            type: Number,
+                            value: 10
+                        }
+
+                };
+            }
+
+            handleResponse(response) {
+                console.log(response.detail.response);
+                this.rented = response.detail.response.rented;
+                this.available = response.detail.response.available;
+                this.long = response.detail.response.long;
+
+            }
+
+
+        }
+
+        window.customElements.define(RentStats.is, RentStats);
+    </script>
+</dom-module>

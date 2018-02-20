@@ -17,14 +17,18 @@
                 color: white;
                 font-weight: bold;
             }
+
+            #deleteEquipment {
+                margin-bottom: 40px;
+            }
         </style>
-        <h5 on-click="toggle" class="card-title">Delete Equipment <iron-icon id="icon" icon="icons:expand-more"></iron-icon></h5>
-        <iron-collapse id="collapse">
+        <div id="deleteEquipment">
+            <h5 class="card-title">Delete Equipment</h5>
             <div>
                 <klingen-notify text="{{alertText}}" status="{{alertStatus}}" id="notify"></klingen-notify>
                 <paper-button raised class="red" on-click="submit">delete</paper-button>
             </div>
-        </iron-collapse>
+        </div>
 
         <iron-ajax id="ironEQ"
                    url="{{url}}equipment/{{id}}"
@@ -56,20 +60,21 @@
             }
 
             handleResponse(response) {
-                Polymer.dom(this.root).querySelector("#notify").addNotification();
+                console.log(reponse.detail.response);
                 this.alertText = response.detail.response.success;
                 this.alertStatus = "success";
+                Polymer.dom(this.root).querySelector("#notify").addNotification();
             }
 
             handleErrorResponse(response) {
-                console.log(response.error);
-                Polymer.dom(this.root).querySelector("#notify").addNotification();
                 this.alertText = response.detail.request.xhr.response.error;
                 console.log(response.detail.request.xhr.response);
                 this.alertStatus = "danger";
+                Polymer.dom(this.root).querySelector("#notify").addNotification();
             }
 
             submit() {
+                console.log(this.id);
                 Polymer.dom(this.root).querySelector("#ironEQ").generateRequest();
             }
 
@@ -84,11 +89,6 @@
                 }
             }
         }
-
-
-
-
-
-            window.customElements.define(DeleteEquipment.is, DeleteEquipment);
+        window.customElements.define(DeleteEquipment.is, DeleteEquipment);
     </script>
 </dom-module>
