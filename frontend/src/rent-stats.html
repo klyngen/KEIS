@@ -1,14 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link href="../bower_components/granite-bootstrap/granite-bootstrap.html" rel="import"/>
-<link href="../bower_components/granite-c3/granite-c3.html" rel="import"/>
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="rent-stats">
     <template>
         <style include="granite-bootstrap">
-            granite-c3 {
-                height: 300px;
-            }
         </style>
 <iron-ajax id="ironStats"
                     auto
@@ -20,18 +16,19 @@
                    cross-domain = "true"
                    debounce-duration="300">
         </iron-ajax>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Rent status</h5>
-                <google-chart
-                        type='pie'
-                        options='{"title": "Distribution of days in 2001Q1"}'
-                        cols='[{"label":"Month", "type":"string"}, {"label":"Days", "type":"number"}]'
-                        rows='[["Jan", 31],["Feb", 28],["Mar", 31]]'>
-                </google-chart>
-            </div>
-        </div>
 
+        <div class="jumbotron">
+            <h1 class="display-3">Lets Manage some equipment!</h1>
+            <p class="lead">
+                Just reading this text will not get the equipment managed. Please proceed with your work.
+            </p>
+            <hr class="my-4">
+            <h1>
+                <span class="badge badge-success">Available: {{available}}</span>
+                <span class="badge badge-info">Rented: {{rented}}</span>
+                <span class="badge badge-danger">Long rent: {{long}}</span>
+            </h1>
+        </div>
     </template>
 
 
@@ -58,7 +55,6 @@
             }
 
             handleResponse(response) {
-                console.log(response.detail.response);
                 this.rented = response.detail.response.rented;
                 this.available = response.detail.response.available;
                 this.long = response.detail.response.long;

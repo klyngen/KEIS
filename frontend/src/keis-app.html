@@ -7,11 +7,11 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 
 <link rel="import" href="equipment-interface.html">
 <link rel="import" href="user-view.html">
@@ -58,53 +58,73 @@
                 }
             }
 
+            .main-title {
+                text-transform: uppercase;
+                font-weight: bold;
+                text-align: center;
+                font-family: 'Roboto', 'Noto', sans-serif;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            paper-tabs {
+                font-family: 'Roboto', 'Noto', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                width: 100%;
+                text-transform: uppercase;
+                margin-bottom: 1px;
+                background: #4285F4;
+                color: #fff;
+            }
+
+            paper-tab {
+                background: #3e7de7;
+            }
+
+             .iron-selected {
+                 border-top-style: solid;
+            }
         </style>
 
         <app-header-layout>
 
             <app-header fixed effects="waterfall" slot="header">
                 <app-toolbar>
-                    <paper-icon-button on-click="toggle" id="toggle" icon="menu"></paper-icon-button>
-                    <div main-title>KEIS Equipment Indexing System</div>
+                    <div class="main-title">KEIS Equipment Indexing System</div>
                 </app-toolbar>
             </app-header>
-            <app-drawer-layout id="drawerLayout">
 
-                <app-drawer id="drawer" slot="drawer"> <!-- MENU ITEMS -->
-                    <div class="drawer-content">
-                        <iron-selector selected="{{page}}" attr-for-selected="name" class="drawer-list" role="navigation">
-                            <paper-icon-item name="dashboard">
-                                <iron-icon icon="icons:dashboard" slot="item-icon"></iron-icon> <span>Dashboard</span>
-                            </paper-icon-item>
-                            <paper-icon-item name="equipment">
-                                    <iron-icon icon="icons:list" slot="item-icon"></iron-icon> <span>Equipment</span>
-                            </paper-icon-item>
-                            <paper-icon-item name="user">
-                                    <iron-icon icon="icons:account-circle" slot="item-icon"></iron-icon> <span>Users</span>
-                            </paper-icon-item>
-                            <paper-icon-item name="rent">
-                                <iron-icon icon="icons:add-circle" slot="item-icon"></iron-icon> <span>Rent</span>
-                            </paper-icon-item>
-                        </iron-selector>
-                    </div>
-                </app-drawer>
+            <paper-tabs selected="{{page}}">
+                <paper-tab>
+                    <iron-icon icon="icons:dashboard" slot="item-icon"></iron-icon> <span>Dashboard</span>
+                </paper-tab>
+
+                <paper-tab>
+                    <iron-icon icon="icons:list" slot="item-icon"></iron-icon> <span>Equipment</span>
+                </paper-tab>
+
+                <paper-tab>
+                    <iron-icon icon="icons:account-circle" slot="item-icon"></iron-icon> <span>Users</span>
+                </paper-tab>
+
+                <paper-tab>
+                    <iron-icon icon="icons:add-circle" slot="item-icon"></iron-icon> <span>Rent</span>
+                </paper-tab>
+            </paper-tabs>
 
                 <div class="content">                   <!-- PAGE CONTENT -->
                     <iron-pages
                             id="page"
-                            selected="[[page]]"
-                            attr-for-selected="name">
+                            selected="[[page]]">
+                        <home-interface name="dashboard" url="{{url}}"></home-interface>
                         <equipment-interface name="equipment" url="{{url}}"></equipment-interface>
                         <user-view name="user" url="{{url}}"></user-view>
                         <rent-interface name="rent" url="{{url}}"></rent-interface>
-                        <home-interface name="dashboard" url="{{url}}"></home-interface>
                         <my-view404 name="view404"></my-view404>
 
                     </iron-pages>
                 </div>
 
 
-            </app-drawer-layout>
 
         </app-header-layout>
 
@@ -120,7 +140,7 @@
                     page: {
                         type: String,
                         observer: '_pageChanged',
-                        value: 'dashboard', // Default page
+                        value: '0', // Default page
                     },
                     routeData: Object,
                     subroute: String,
