@@ -3,13 +3,18 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/granite-bootstrap/granite-bootstrap.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/google-chart/google-chart.html">
+
 <link rel="import" href="instance-item.html">
 
 
 <dom-module id="instance-search">
     <template>
         <style include="granite-bootstrap">
-
+            google-chart {
+                height: 300px;
+                width: 50em;
+            }
         </style>
 
         <div class="card">
@@ -22,7 +27,6 @@
 
         <iron-ajax
                 id="iron"
-                auto
                 url="{{url}}instance/rfid"
                 body='{
                    "RFID": "{{rfid}}"
@@ -52,7 +56,10 @@
             static get properties() {
                 return {
                     url: String,
-                    rfid: String,
+                    rfid: {
+                        type: String,
+                        observer: '_change'
+                    },
                     data: Object,
                     id:{
                         type: Number,
@@ -71,6 +78,10 @@
             handleErrorResponse(response) {
                 this.$.collapse.hide();
                 this.id = null;
+            }
+
+            _change() {
+                this.$.iron.generateRequest();
             }
         }
 

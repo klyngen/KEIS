@@ -23,9 +23,12 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Rent status</h5>
-                <granite-c3
-                        data="{&quot;columns&quot;: [[&quot;Available&quot;, &quot;{{available}}&quot;], [&quot;Rented&quot;, &quot;{{rented}}&quot;], [&quot;One week <&quot;, &quot;{{long}}&quot;]], &quot;type&quot;: &quot;donut&quot;}"
-                        donut="{&quot;title&quot;: &quot;Rent status&quot;}"></granite-c3>
+                <google-chart
+                        type='pie'
+                        options='{"title": "Distribution of days in 2001Q1"}'
+                        cols='[{"label":"Month", "type":"string"}, {"label":"Days", "type":"number"}]'
+                        rows='[["Jan", 31],["Feb", 28],["Mar", 31]]'>
+                </google-chart>
             </div>
         </div>
 
@@ -39,8 +42,8 @@
                 return {
                   url: String,
                         available: {
-                            type: Number,
-                            value: 10
+                            type: String,
+                            value: "10"
                         },
                         rented: {
                             type: Number,
