@@ -19,3 +19,6 @@ should be quite painless.
 
 # Contributions wanted
 If you like my work, please let me know. I am open to all contributions to this project. I believe it has a great potential. 
+
+# LEGAL WARNING 
+Since this system is capable of storing personal information, it is important that you as a user spends time to research rules of your country.
