@@ -1,3 +1,6 @@
+![KEIS](https://github.com/klyngen/KEIS/blob/master/doc/dashboard.png)
+
+
 # KEIS
 System for renting out equipment. System is made to handle a large amount of equipment. And are supposed to be managed by RFID tags
 
