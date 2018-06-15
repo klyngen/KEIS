@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             //$table->string('password');
             $table->string('studentNumber')->unique();
+            $table->string('rfid')->unique();
             //$table->rememberToken();
             $table->timestamps();
         });

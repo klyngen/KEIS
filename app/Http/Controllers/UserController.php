@@ -58,15 +58,23 @@ class UserController extends Controller
         return response()->json($rent, 200);
     }
 
+    /**
+     *  Also try to find a user by RFID if no user is found by the ID
+     */
     public function findUserById(Request $request, $id) {
         $users = User::where('studentNumber', 'like', "$id%")->get();
 
-        if ($users != null) {
-            return response()->json($users, 200);
+        if ($users == null) {
+            // No user found by ID, try using RFID
+            $users = User::where("rfid", "like", $id);
+
+            // If no user is found
+            if ($users == null) {
+                return response()->json(['error'=>'could not find user'], 412);
+            }
         }
 
-        return response()->json(['error'=>'could not find user'], 412);
-
-    }
-
+        // Return one or many users
+        return response()->json($users, 200);
+     }
 }
