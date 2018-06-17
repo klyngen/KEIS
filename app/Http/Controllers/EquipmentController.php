@@ -83,7 +83,9 @@ class EquipmentController extends Controller {
         if ($type != null)
             array_push($parameters, ['types', '=', $type]);
 
-        if (count($model) > 0) {
+        
+
+        if ($model != null){
             array_push($parameters, ['model', 'LIKE', "%$model%"]);
             //array_push($parameters, ['Description', 'LIKE', "%$model%"]);
         }

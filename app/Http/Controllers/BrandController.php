@@ -8,16 +8,21 @@ use App\Brand;
 class BrandController extends Controller
 {
     public static function solveDependence($b) {
-      $brand = Brand::select('id')->where('name', strtoupper($b))->get();
 
-      if (count($b) < 1) {
-        return null;
+      if ($b == null) {
+        return array();
       }
 
-      if ($brand->isNotEmpty()) {
+      \Log::info("This is the parameter".gettype($b));
+      // Fetch brands
+      $brand = Brand::select('id')->where('name', strtoupper($b))->get();
+
+
+      if ($brand->isNotEmpty()) { // If brands have been found
         return $brand[0]->id;
       }
 
+      // If no brands have been found
       return Brand::create(Array("name"=>strtoupper($b)))->id;
     }
 
