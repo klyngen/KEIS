@@ -43,7 +43,7 @@ class EquipmentController extends Controller {
         }
 
 
-        return response()->json(["success"=>"equipment added"], 201);
+        return response()->json(["success"=>"equipment added", "data"=>$eq], 201);
     }
 
     public function update(Request $request, $id) {

@@ -39,4 +39,3 @@ class CreateRentsTable extends Migration
         Schema::dropIfExists('rents');
     }
 }
-https://github.com/xcwen/ac-phphttps://github.com/xcwen/ac-php
