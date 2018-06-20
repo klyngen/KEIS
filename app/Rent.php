@@ -4,6 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Rent
+ *
+ * @mixin \Eloquent
+ */
 class Rent extends Model
 {
     protected $fillable = ['users', 'instances', 'stop'];

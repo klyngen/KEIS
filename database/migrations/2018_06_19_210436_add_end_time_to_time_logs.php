@@ -15,7 +15,7 @@ class AddEndTimeToTimeLogs extends Migration
     {
         //
         Schema::table('timeLogs', function(Blueprint $table) {
-            $table->dateTime('stop');
+            $table->dateTime('stop')->nullable();
         });
     }
 

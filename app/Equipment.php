@@ -9,6 +9,17 @@ use App\Brand;
 use App\Type;
 use App\Instance;
 
+/**
+ * App\Equipment
+ *
+ * @property-read mixed $available
+ * @property-read mixed $brands
+ * @property-read mixed $rented
+ * @property-read mixed $total
+ * @property-read mixed $types
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Instance[] $instances
+ * @mixin \Eloquent
+ */
 class Equipment extends Model
 {
     protected $appends = ["types", "brands", "available", "total", "rented"];
