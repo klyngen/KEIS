@@ -51,3 +51,8 @@ Route::get('user/search/{id}', 'UserController@findUserById');
 Route::get('brand', 'BrandController@index');
 Route::get('type', 'TypeController@index');
 
+// Time logging API
+Route::post('timeLog', 'TimeLogController@createLogInstance');
+Route::put('timeLog', 'TimeLogController@updateLogEntry');
+Route::post('timeLog/get', 'TimeLogController@getLogData');
+Route::get('timeLog{id}', 'TimeLogController@getLogEntry');

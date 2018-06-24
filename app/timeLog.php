@@ -12,4 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 class timeLog extends Model
 {
     //
+    protected $fillable = ['rfid', 'stop'];
+    protected $table = 'timeLogs';
 }
