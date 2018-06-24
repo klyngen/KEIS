@@ -33,12 +33,22 @@ class TimeLogController extends Controller
         }
 
         $logEntry = timeLog::where('rfid', '=', $id)->whereNull('stop')->firstOrFail();
-        $endTime = $this->createEndDate($request);
-        $carbonEnd = Carbon::parse($endTime);
-        $carbonStart = Carbon::parse($logEntry->created_at);
 
 
-        $hours = $carbonStart->diffInHours($carbonEnd);
+        // If the checkout is not specified and seems stupid
+        // Do not store the checkout. Most likely the user being stupid
+        if (!$request->exists('stop')) {
+            $endTime = $this->createEndDate($request);
+            $carbonEnd = Carbon::parse($endTime);
+            $carbonStart = Carbon::parse($logEntry->created_at);
+
+
+            $hours = $carbonStart->diffInHours($carbonEnd);
+
+            if ($hours >= 24) {
+                return response()->json(["error"=>"the interval is suspiciously large", "data"=>["interval"=>$hours, "solution"=>"add the endtime in the post request if you are a workoholic"]], 409);
+            }
+        }
 
         if ($logEntry != null) {
             $logEntry->stop = $this->createEndDate($request);
@@ -73,8 +83,8 @@ class TimeLogController extends Controller
     public function getLogData(Request $request) {
 
         try {
-            $logEntries = timeLog::where('created_at', '>=', $request->input('beginning'))
-                  ->where('stop', '<=', $request->input('end'))->get();
+            $logEntries = timeLog::select(['created_at', 'stop'])->where('created_at', '>=', $request->input('beginning'))
+                        ->where('stop', '<=', $request->input('end'))->whereNotNull('stop')->get();
 
             return response()->json(['success'=>'extraction successfull', 'data'=>$logEntries], 500);
         } catch (Exception $e) {
@@ -82,9 +92,18 @@ class TimeLogController extends Controller
         }
     }
 
-    public function getLogEntry(Request $request, $id) {
+    public function getLogEntry(Request $request) {
+        if (!$request->exists('rfid')) {
+            return response()->json(["error"=>"missing parameter"], 200);
+        }
         try {
-            $log = timeLog::where('rfid', '=', $id)->firstOrFail();
+            $log = timeLog::where('rfid', '=', $request->input('rfid'))->first();
+            if ($log == null) {
+                return response()->json(["error"=>"entry not found. Log in first"], 204);
+            }
+
+            \Log::warning("$log");
+
             return response()->json(["success"=>"found item", "data"=>$log], 200);
         } catch (Exception $e) {
             return response()->json(["error"=>"server error", "data"=>[]], 500);
