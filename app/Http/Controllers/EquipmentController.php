@@ -16,6 +16,8 @@ class EquipmentController extends Controller {
     public function show($id) {
         //return Equipment::find($id);
         $eq = Equipment::find($id);
+        $eq->instances = $eq->instances(); 
+        //$eq->instances = $eq::instances();
         return response()->json($eq, 200);
     }
 

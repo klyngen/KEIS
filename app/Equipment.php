@@ -27,7 +27,8 @@ class Equipment extends Model
     protected $fillable = ["brands", "types", "model", "description"];
 
     public function instances() {
-        return $this->hasMany('App\Instance');
+        return Instance::where('equipment', '=', $this->id)->get();
+        //return $this->hasMany('App\Instance');
     }
 
     public function getBrandsAttribute() {
