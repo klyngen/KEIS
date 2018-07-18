@@ -21,7 +21,13 @@ class TypeController extends Controller
     }
 
     public function index() {
-        return response()->json(Type::all(), 200);
+
+        try {
+            return response()->json(['success'=>'OK', 'data'=> Type::all()], 200);    
+        } catch (Exception $e) {
+            return response()->json(['error'=>'could not find any brands'], 500);
+        }
+      
     }
 
 }

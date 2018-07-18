@@ -10,15 +10,23 @@ use Mockery\Exception;
 class EquipmentController extends Controller {
     // Rreturns all the equipment instances
     public function index() {
-        return Equipment::all();
+        try {
+            return response()->json(['success'=> 'OK', 'data'=>Equipment::all()], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Server error'], 500);
+        }
     }
 
     public function show($id) {
         //return Equipment::find($id);
-        $eq = Equipment::find($id);
-        $eq->instances = $eq->instances(); 
-        //$eq->instances = $eq::instances();
-        return response()->json($eq, 200);
+        try {
+            $eq = Equipment::find($id);
+            $eq->instances = $eq->instances(); 
+            //$eq->instances = $eq::instances();
+            return response()->json(['success'=> 'OK', 'data'=>$eq], 200);
+        } catch (Exception $e) {
+            return response()->json(['error'=>'could not fetch the equipment'], 500);
+        }
     }
 
     public function store(Request $request) {
