@@ -30,6 +30,19 @@ class InstanceController extends Controller
 
     }
 
+    /**
+     * Returns true if the rfid does not exist in the database
+     */
+    public function validateRFID (Request $request) {
+        $this->validate($request, ['rfid' => 'required']);
+
+        if (Instance::where('rfid', '=', $request->input('rfid'))->exists()) {
+            return response()->json(["error"=>"rfid found"], 200);
+        }
+
+        return response()->json(["success"=>"rfid does not exist"], 200);
+    }
+
     public function RFIDExists($rfid) {
       $result = Instance::where("RFID", $rfid)->get();
 
@@ -46,7 +59,7 @@ class InstanceController extends Controller
 
       if (is_array($result)) {
         $instance->update($result);
-        return response()->json(Array("Success"=>"Instance updated"), 201);
+        return response()->json(Array("success"=>"Instance updated"), 201);
       }
 
       return response()->json($result, 201);
