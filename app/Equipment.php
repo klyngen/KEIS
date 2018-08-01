@@ -42,7 +42,6 @@ class Equipment extends Model
 
     public function getAvailableAttribute() {
         $available = Instance::where('rented', '=', 0)->where('equipment', '=', $this->attributes['id'])->count();
-        error_log($available);
         return $available;
     }
 

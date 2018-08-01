@@ -31,8 +31,10 @@ class EquipmentController extends Controller {
 
     public function store(Request $request) {
 
-        $brand = BrandController::solveDependence($request->input('brand'));
-        $type = TypeController::solveDependence($request->input('type'));
+        $this->validate($request, ['model' => 'required', 'brands'=>'required', 'types'=>'required']);
+
+        $brand = BrandController::solveDependence($request->input('brands'));
+        $type = TypeController::solveDependence($request->input('types'));
 
 
         if ($brand == null) {
@@ -43,11 +45,19 @@ class EquipmentController extends Controller {
           return response()->json(["error"=>"missing type"], 400);
         }
 
+
         try {
-          $eq = Equipment::create(Array("brands"=>$brand,
-              "types"=>$type,
-              "description"=>$request->input('description'),
-              "model"=>$request->input("model")));
+            $eq = new Equipment();
+            $eq->model = $request->input('model');
+            $eq->brands = $brand;
+            $eq->types = $type;
+            if ($request->input('Description') == null) {
+                $eq->Description = '';
+            } else {
+                $eq->Description = $request->input('Description');
+            }
+            $eq->save();
+
         } catch (Exception $e) {
             return response()->json(["error"=>"malformed request: $e"], 400);
         }
@@ -59,12 +69,12 @@ class EquipmentController extends Controller {
     public function update(Request $request, $id) {
       $eq = Equipment::findOrFail($id);
 
-      $brand = BrandController::solveDependence($request->input('brand'));
-      $type = TypeController::solveDependence($request->input('type'));
+      $brand = BrandController::solveDependence($request->input('brands'));
+      $type = TypeController::solveDependence($request->input('types'));
 
       $eq->update(Array('brands'=>$brand,
       'types'=>$type,
-      'description'=>$request->input('description'),
+      'description'=>$request->input('Description'),
       'model'=>$request->input('model')));
 
       return response()->json(["success"=>"equipment updated"], 200);
@@ -97,7 +107,6 @@ class EquipmentController extends Controller {
 
         if ($model != null){
             array_push($parameters, ['model', 'LIKE', "%$model%"]);
-            //array_push($parameters, ['Description', 'LIKE', "%$model%"]);
         }
 
 
