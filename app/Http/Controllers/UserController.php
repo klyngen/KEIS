@@ -9,7 +9,7 @@ use App\Rent;
 class UserController extends Controller
 {
     public function index() {
-        return response()->json(User::all(), 200);
+        return response()->json(['success'=>'', 'data'=>User::all()], 200);
     }
 
     public function show($id) {
@@ -26,6 +26,14 @@ class UserController extends Controller
         return response()->json(['error'=>'User not found'], 404);
     }
 
+    public function update(Request $request, $id) {
+        $user = User::findOrFail($id);
+
+        if ($user->update($request->all())) {
+            return response()->json(['success'=>'uddated user', 'data'=>$user], 200);
+        }
+        return responce()->json(['error'=>'bad attempt'], 400);
+    }
 
     public function store(Request $request) {
 
@@ -62,7 +70,7 @@ class UserController extends Controller
         $users = User::where('studentNumber', 'like', "$id%")->get();
 
         if ($users != null) {
-            return response()->json($users, 200);
+            return response()->json(['success' => 'found users', 'data'=>$users], 200);
         }
 
         return response()->json(['error'=>'could not find user'], 412);

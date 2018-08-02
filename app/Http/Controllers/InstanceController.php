@@ -22,7 +22,7 @@ class InstanceController extends Controller
 
       if (is_array($result)) {
           $instance = Instance::create($result);
-          return response()->json(["success"=>"instance added"], 201);
+          return response()->json(["success"=>"instance added", "data" => $instance], 201);
       } else {
           return response()->json(["error"=>$result], 400);
       }
@@ -34,7 +34,10 @@ class InstanceController extends Controller
      * Returns true if the rfid does not exist in the database
      */
     public function validateRFID (Request $request) {
-        $this->validate($request, ['rfid' => 'required']);
+
+        if (!$request->has('rfid')) {
+            return response()->json(['error'=>"missing RFID-element"], 400);
+        }
 
         if (Instance::where('rfid', '=', $request->input('rfid'))->exists()) {
             return response()->json(["error"=>"rfid found"], 200);

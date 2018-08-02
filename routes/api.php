@@ -42,6 +42,7 @@ Route::get('stats', 'RentController@statistics');
 // User functionality
 Route::get('user', 'UserController@index');
 Route::get('user/{id}', 'UserController@show');
+Route::put('user/{id}', 'UserController@update');
 Route::delete('user/{id}', 'UserController@delete');
 Route::post('user', 'UserController@store');
 Route::get('user/activerent/{id}', 'UserController@activeRent'); 
