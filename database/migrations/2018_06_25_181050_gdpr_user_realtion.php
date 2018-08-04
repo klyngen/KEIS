@@ -14,8 +14,6 @@ class GdprUserRealtion extends Migration
     public function up()
     {
 
-        // Makes the users key nullable
-
         // Recreate the foreign key to make it nullable
         Schema::table('rents', function (Blueprint $table) {
             // Drop the existing foreign key

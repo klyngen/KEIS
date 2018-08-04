@@ -14,7 +14,7 @@ class InstanceController extends Controller
       if ($in->isNotEmpty()) {
         return response()->json($in, 200);
       }
-      return response()->json(Array("error"=>"could not find any instances"), 404);
+      return response()->json(Array("error"=>"could not find any instances"), 204);
     }
 
     public function store(Request $request) {
@@ -88,7 +88,7 @@ class InstanceController extends Controller
         error_log($request);
         $instance = Instance::where('RFID', '=', $request->input("RFID"))->first();
         if ($instance == null) {
-            return response()->json(["error"=>"could not find the instance"], 404);
+            return response()->json(["error"=>"could not find the instance"], 204);
         }
         return $instance;
     }
