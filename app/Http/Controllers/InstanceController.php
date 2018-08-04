@@ -104,9 +104,9 @@ class InstanceController extends Controller
         error_log($request);
         $instance = Instance::where('RFID', '=', $request->input("RFID"))->first();
         if ($instance == null) {
-            return response()->json(["error"=>"could not find the instance"], 404);
+            return response()->json(["success"=>"could not find the instance"], 200);
         }
-        return $instance;
+        return response()->json(['success'=>'', 'data'=>$instance ], 200);
     }
 
 }
