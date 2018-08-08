@@ -47,7 +47,8 @@ class UserController extends Controller
         try {
             User::create(['name' => $request->input('name'),
                 'studentNumber' => $request->input('studentNumber'),
-                'email' => $request->input('email')]);
+                          'email' => $request->input('email'),
+                          'rfid'=>$request->input('rfid')]);
             return response()->json(["success"=>"user created"], 201);
         } catch (Exception $e) {
             return response()->json(["error"=>"could not add user"], 404);
@@ -63,7 +64,7 @@ class UserController extends Controller
               ->join('instances', 'rents.instances', "=", "instances.id")
               ->join('equipment', 'instances.equipment', "=", "equipment.id")->get();
 
-        return response()->json($rent, 200);
+        return response()->json(['success'=>'', 'data'=>$rent], 200);
     }
 
     public function findUserById(Request $request, $id) {
