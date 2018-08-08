@@ -56,7 +56,7 @@ Route::get('type', 'TypeController@index');
 Route::post('timeLog', 'TimeLogController@createLogInstance');
 Route::put('timeLog', 'TimeLogController@updateLogEntry');
 Route::post('timeLog/get', 'TimeLogController@getLogData');
-Route::get('timeLog', 'TimeLogController@getLogEntry');
+Route::get('timeLog/{id}', 'TimeLogController@getLogEntry');
 
 
 // Utilities

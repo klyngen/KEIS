@@ -11,11 +11,11 @@ use Carbon\Carbon;
 class RentController extends Controller
 {
     public function index() {
-        return response()->json(['success' => 'found', 'data'=>Rent::all()], 200);
+        return response()->json(['success' => 'found', 'data'=>Rent::whereNull('stop')->get()], 200);
     }
 
     public function show($id) {
-        return response()->json(Rent::find($id), 200);
+        return response()->json(Rent::whereNull('stop')->find($id), 200);
     }
 
     /**
@@ -56,23 +56,30 @@ class RentController extends Controller
     }
 
     public function deliver(Request $request) {
-        try {
-            $rent = Rent::join('instances', 'rents.instances', '=', 'instances.id')
-                ->where('RFID', $request->input("RFID"))
-                ->whereNull("stop")->first();
-            $instance = Instance::where('id', '=', $rent->instances)->first();
-            $instance->rented = 0;
-        } catch (\Exception $e) {
-            return response()->json(["error"=>"something has gone wrong during delivery"], 500);
-        }
+        //try {
+        //$rent = Rent::join('instances', 'rents.instances', '=', 'instances.id')
+        //->where('RFID', $request->input("RFID"))
+        //->whereNull("stop")->orderBy('rents.id', 'desc')->first();
+        //$instance = Instance::where('id', '=', $rent->instances)->first();
+        //$instance->rented = 0;
 
+        $instance = Instance::where('RFID', '=', $request->input('RFID'))->first();
+        $instance->rented = 0;
+
+        if ($request->has('condition')) {
+            $instance->condition = $request->input('condition');
+        }
         $instance->save();
 
-        $now = Carbon::now();
-
-        $rent->stop = $now->toDateTimeString();
-
+        $rent = Rent::whereNull('stop')->where('instances', $instance->id)->first();
+        $rent->stop = Carbon::now()->toDateTimeString();
         $rent->save();
+
+
+            //} catch (\Exception $e) {
+            //return response()->json(["error"=>"something has gone wrong during delivery"], 500);
+            //}
+
         return response()->json(["success"=>"item delivered"], 200);
     }
 

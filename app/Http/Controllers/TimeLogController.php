@@ -13,6 +13,13 @@ class TimeLogController extends Controller
         $result = array('rfid'=>$request->input('rfid'));
         // Means that something was parsed
         if (is_array($result)) {
+
+            $data = TimeLogg::whereNull('stop')->where('rfid', $request->input('rfid')->first());
+
+            if (!$data) {
+                return response()->json(['success'=>'need to log out first'], 200);
+            }
+
             $lowRow = timeLog::create($result);
             return response()->json(["success"=>"Logg entry created", 'data' => $lowRow], 201);
         }
@@ -37,7 +44,7 @@ class TimeLogController extends Controller
 
         // If the checkout is not specified and seems stupid
         // Do not store the checkout. Most likely the user being stupid
-        if (!$request->exists('stop')) {
+        if (!$request->has('stop')) {
             $endTime = $this->createEndDate($request);
             $carbonEnd = Carbon::parse($endTime);
             $carbonStart = Carbon::parse($logEntry->created_at);
@@ -52,7 +59,6 @@ class TimeLogController extends Controller
 
         if ($logEntry != null) {
             $logEntry->stop = $this->createEndDate($request);
-            $logEntry->rfid = "DONE";
             $logEntry->save();
 
             try{
@@ -92,19 +98,19 @@ class TimeLogController extends Controller
         }
     }
 
-    public function getLogEntry(Request $request) {
-        if (!$request->exists('rfid')) {
+    public function getLogEntry(Request $request, $id) {
+        if ($id == null) {
             return response()->json(["error"=>"missing parameter"], 200);
         }
         try {
-            $log = timeLog::where('rfid', '=', $request->input('rfid'))->first();
+            $log = timeLog::where('rfid', '=', $id)->first();
             if ($log == null) {
-                return response()->json(["error"=>"entry not found. Log in first"], 204);
+                return response()->json(["success"=>"false"], 200);
             }
 
             \Log::warning("$log");
 
-            return response()->json(["success"=>"found item", "data"=>$log], 200);
+            return response()->json(["success"=>"true", "data"=>$log], 200);
         } catch (Exception $e) {
             return response()->json(["error"=>"server error", "data"=>[]], 500);
         }
