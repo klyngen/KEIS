@@ -22,12 +22,28 @@ class InstanceController extends Controller
 
       if (is_array($result)) {
           $instance = Instance::create($result);
-          return response()->json(["success"=>"instance added"], 201);
+          return response()->json(["success"=>"instance added", "data" => $instance], 201);
       } else {
           return response()->json(["error"=>$result], 400);
       }
 
 
+    }
+
+    /**
+     * Returns true if the rfid does not exist in the database
+     */
+    public function validateRFID (Request $request) {
+
+        if (!$request->has('rfid')) {
+            return response()->json(['error'=>"missing RFID-element"], 400);
+        }
+
+        if (Instance::where('rfid', '=', $request->input('rfid'))->exists()) {
+            return response()->json(["error"=>"rfid found"], 200);
+        }
+
+        return response()->json(["success"=>"rfid does not exist"], 200);
     }
 
     public function RFIDExists($rfid) {
@@ -46,7 +62,7 @@ class InstanceController extends Controller
 
       if (is_array($result)) {
         $instance->update($result);
-        return response()->json(Array("Success"=>"Instance updated"), 201);
+        return response()->json(Array("success"=>"Instance updated"), 201);
       }
 
       return response()->json($result, 201);
@@ -88,9 +104,10 @@ class InstanceController extends Controller
         error_log($request);
         $instance = Instance::where('RFID', '=', $request->input("RFID"))->first();
         if ($instance == null) {
-            return response()->json(["error"=>"could not find the instance"], 204);
+
+            return response()->json(["success"=>"could not find the instance"], 200);
         }
-        return $instance;
+        return response()->json(['success'=>'', 'data'=>$instance ], 200);
     }
 
 }

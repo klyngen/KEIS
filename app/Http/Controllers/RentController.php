@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class RentController extends Controller
 {
     public function index() {
-        return response()->json(Rent::all(), 200);
+        return response()->json(['success' => 'found', 'data'=>Rent::all()], 200);
     }
 
     public function show($id) {
@@ -23,9 +23,15 @@ class RentController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $response) {
+        if (!$response->has('studentNumber') && !$response->has('instance')) {
+            return response()->json(['error'=>'missing parameters'], 400);
+        }
+
         $user = User::where('studentNumber', '=', $response->input('studentNumber'))->first();
         $instance = Instance::where('id', '=', $response->input('instance'))->first();
-
+        error_log($response);
+        error_log($instance);
+        error_log($user);
         if ($instance == null || $user == null) {
             return response()->json(Array("error"=>"incorrect data"), 404);
         }
