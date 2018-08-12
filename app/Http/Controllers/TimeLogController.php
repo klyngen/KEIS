@@ -41,6 +41,10 @@ class TimeLogController extends Controller
 
         $logEntry = timeLog::where('rfid', '=', $id)->whereNull('stop')->firstOrFail();
 
+        if ($logEntry == null) {
+            return response()->json(['error'=>"Element not found"], 400);
+        }
+
 
         // If the checkout is not specified and seems stupid
         // Do not store the checkout. Most likely the user being stupid
@@ -52,23 +56,25 @@ class TimeLogController extends Controller
 
             $hours = $carbonStart->diffInHours($carbonEnd);
 
-            if ($hours >= 24) {
-                return response()->json(["error"=>"the interval is suspiciously large", "data"=>["interval"=>$hours, "solution"=>"add the endtime in the post request if you are a workoholic"]], 409);
+            if ($hours >= 12) {
+                return response()->json(["error"=>"false", "data"=>["interval"=>$hours, "solution"=>"add the endtime in the post request if you are a workoholic"]], 200);
             }
-        }
-
-        if ($logEntry != null) {
             $logEntry->stop = $this->createEndDate($request);
-            $logEntry->save();
-
-            try{
-                return response()->json(['success'=>"Updated element with id $id", 'data'=>$logEntry], 200);
-            } catch (Exception $e) {
-                return response()->json(['error'=>'update could not be performed'], 500);
+        } else {
+            // The stop is defined
+            if ($request->input('stop') == null) {
+                return response()->json(['error'=>'update could not be performed'], 200);
             }
+            $logEntry->stop = $request->input('stop');
         }
 
-        return response()->json(['error'=>"Element not found"], 400);
+        try{
+            $logEntry->save();
+            return response()->json(['success'=>"Updated element with id $id", 'data'=>$logEntry], 200);
+        } catch (Exception $e) {
+            return response()->json(['error'=>'update could not be performed'], 200);
+        }
+
     }
 
 
@@ -87,12 +93,12 @@ class TimeLogController extends Controller
 
     // Extract data between two points of time
     public function getLogData(Request $request) {
-
+        $users = array();
         try {
-            $logEntries = timeLog::select(['created_at', 'stop'])->where('created_at', '>=', $request->input('beginning'))
+            $logEntries = timeLog::select(['created_at', 'stop', 'rfid'])->where('created_at', '>=', $request->input('beginning'))
                         ->where('stop', '<=', $request->input('end'))->whereNotNull('stop')->get();
 
-            return response()->json(['success'=>'extraction successfull', 'data'=>$logEntries], 500);
+            return response()->json(['success'=>'extraction successfull', 'data'=>$logEntries], 200);
         } catch (Exception $e) {
             return response()->json(['error'=>'could not retreive data'], 500);
         }
@@ -107,8 +113,6 @@ class TimeLogController extends Controller
             if ($log == null) {
                 return response()->json(["success"=>"false"], 200);
             }
-
-            \Log::warning("$log");
 
             return response()->json(["success"=>"true", "data"=>$log], 200);
         } catch (Exception $e) {
