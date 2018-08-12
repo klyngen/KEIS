@@ -14,14 +14,14 @@ class TimeLogController extends Controller
         // Means that something was parsed
         if (is_array($result)) {
 
-            $data = TimeLogg::whereNull('stop')->where('rfid', $request->input('rfid')->first());
+            $data = timeLog::whereNull('stop')->where('rfid', $request->input('rfid'))->first();
 
-            if (!$data) {
-                return response()->json(['success'=>'need to log out first'], 200);
+            if ($data != null) {
+                return response()->json(['success'=>'false', 'data'=>$data], 200);
             }
 
             $lowRow = timeLog::create($result);
-            return response()->json(["success"=>"Logg entry created", 'data' => $lowRow], 201);
+            return response()->json(["success"=>"true", 'data' => $lowRow], 201);
         }
 
         return response()->json(["error"=>"invalid request"], 400);
